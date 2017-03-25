@@ -996,7 +996,7 @@ public abstract class AbstractConnection {
         }
         if (null != m) {
             m.setReply(err);
-            CallbackHandler cbh = null;
+            CallbackHandler<? extends Object> cbh = null;
             DBusAsyncReply asr = null;
             synchronized (pendingCallbacks) {
                 cbh = pendingCallbacks.remove(m);
@@ -1005,7 +1005,7 @@ public abstract class AbstractConnection {
             }
             // queue callback for execution
             if (null != cbh) {
-                final CallbackHandler fcbh = cbh;
+                final CallbackHandler<? extends Object> fcbh = cbh;
                 logger.trace("Adding Error Runnable with callback handler {}", fcbh);
                 addRunnable(new Runnable() {
                     private boolean run = false;
@@ -1059,7 +1059,7 @@ public abstract class AbstractConnection {
         if (null != m) {
             m.setReply(mr);
             mr.setCall(m);
-            CallbackHandler cbh = null;
+            CallbackHandler<? extends Object> cbh = null;
             DBusAsyncReply asr = null;
             synchronized (pendingCallbacks) {
                 cbh = pendingCallbacks.remove(m);
@@ -1068,7 +1068,7 @@ public abstract class AbstractConnection {
             }
             // queue callback for execution
             if (null != cbh) {
-                final CallbackHandler fcbh = cbh;
+                final CallbackHandler<Object> fcbh = (CallbackHandler<Object>) cbh;
                 final DBusAsyncReply fasr = asr;
                 logger.trace("Adding Runnable for method {} with callback handler {}", fasr.getMethod(), fcbh);
                 addRunnable(new Runnable() {

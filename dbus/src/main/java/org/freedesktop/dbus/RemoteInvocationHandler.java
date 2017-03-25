@@ -88,7 +88,7 @@ class RemoteInvocationHandler implements InvocationHandler {
 
     @SuppressWarnings("unchecked")
     public static Object executeRemoteMethod(final RemoteObject ro, final Method m, final AbstractConnection conn,
-            final int syncmethod, final CallbackHandler callback, Object... args) throws DBusExecutionException {
+            final int syncmethod, final CallbackHandler<?> callback, Object... args) throws DBusExecutionException {
         final Type[] ts = m.getGenericParameterTypes();
         String sig = null;
         if (ts.length > 0) {
