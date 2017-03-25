@@ -551,7 +551,7 @@ public class Marshalling {
                 type2 = null;
             }
             if (null != type2) {
-                parameter = deSerializeParameters((List) parameter, type2, conn);
+                parameter = deSerializeParameters((List<Object>) parameter, type2, conn);
             }
         }
 
