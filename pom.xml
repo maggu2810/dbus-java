@@ -2,8 +2,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>de.maggu2810.thirdparty.org.freedesktop.dbus</groupId>
-  <artifactId>dbus-java-base</artifactId>
+  <groupId>de.maggu2810.dbus</groupId>
+  <artifactId>dbus-java</artifactId>
   <version>2.7.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
@@ -11,15 +11,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <java.version>1.8</java.version>
+    <java.version>1.5</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
-    <maven.compiler.compilerVersion>${java.version}</maven.compiler.compilerVersion>
-
-    <bnd.version>3.3.0</bnd.version>
-
-    <libmatthew.debug.version>1.1.0-SNAPSHOT</libmatthew.debug.version>
-    <libmatthew.unix.version>0.5.0-SNAPSHOT</libmatthew.unix.version>
   </properties>
 
   <licenses>
@@ -36,14 +30,9 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>de.maggu2810.thirdparty.cx.ath.matthew</groupId>
-        <artifactId>libmatthew-debug</artifactId>
-        <version>${libmatthew.debug.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>de.maggu2810.thirdparty.cx.ath.matthew</groupId>
-        <artifactId>libmatthew-unix</artifactId>
-        <version>${libmatthew.unix.version}</version>
+        <groupId>de.maggu2810.libmatthew</groupId>
+        <artifactId>unix</artifactId>
+        <version>0.5.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -51,38 +40,30 @@
   <build>
     <pluginManagement>
       <plugins>
-        <!-- sorted by artifact id (group id not used for sorting) -->
-
         <plugin>
           <groupId>biz.aQute.bnd</groupId>
           <artifactId>bnd-maven-plugin</artifactId>
-          <version>${bnd.version}</version>
+          <version>3.3.0</version>
         </plugin>
-
         <plugin>
-          <groupId>com.googlecode.gettext-commons</groupId>
-          <artifactId>gettext-maven-plugin</artifactId>
-          <version>1.2.4</version>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.6.0</version>
         </plugin>
-
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
-
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>native-maven-plugin</artifactId>
-          <version>1.0-alpha-8</version>
-        </plugin>
-
       </plugins>
     </pluginManagement>
   </build>
 
   <modules>
-    <module>dbus-java</module>
+    <module>dbus</module>
+    <module>dbus-bin</module>
+    <module>dbus-test</module>
+    <module>dbus-viewer</module>
   </modules>
 
 </project>
