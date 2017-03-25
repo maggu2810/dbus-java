@@ -938,27 +938,28 @@ public class DBusDaemon extends Thread {
 
     private static void doTCP(final BusAddress address) throws IOException {
         LOGGER.debug("enter");
-        final ServerSocket ss = new ServerSocket(Integer.parseInt(address.getParameter("port")), 10,
-                InetAddress.getByName(address.getParameter("host")));
-        final DBusDaemon d = new DBusDaemon();
-        d.start();
-        d.sender.start();
-        d.dbus_server.start();
+        try (final ServerSocket ss = new ServerSocket(Integer.parseInt(address.getParameter("port")), 10,
+                InetAddress.getByName(address.getParameter("host")))) {
+            final DBusDaemon d = new DBusDaemon();
+            d.start();
+            d.sender.start();
+            d.dbus_server.start();
 
-        // accept new connections
-        while (d._run) {
-            final Socket s = ss.accept();
-            boolean authOK = false;
-            try {
-                authOK = new Transport.SASL().auth(Transport.SASL.MODE_SERVER, Transport.SASL.AUTH_EXTERNAL,
-                        address.getParameter("guid"), s.getOutputStream(), s.getInputStream(), null);
-            } catch (final Exception e) {
-                LOGGER.debug("Exception", e);
-            }
-            if (authOK) {
-                d.addSock(s);
-            } else {
-                s.close();
+            // accept new connections
+            while (d._run) {
+                final Socket s = ss.accept();
+                boolean authOK = false;
+                try {
+                    authOK = new Transport.SASL().auth(Transport.SASL.MODE_SERVER, Transport.SASL.AUTH_EXTERNAL,
+                            address.getParameter("guid"), s.getOutputStream(), s.getInputStream(), null);
+                } catch (final Exception e) {
+                    LOGGER.debug("Exception", e);
+                }
+                if (authOK) {
+                    d.addSock(s);
+                } else {
+                    s.close();
+                }
             }
         }
         LOGGER.debug("exit");

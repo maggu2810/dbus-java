@@ -279,21 +279,25 @@ public class DBusConnection extends AbstractConnection {
                             throw new DBusException(localize("Cannot Resolve Session Bus Address"));
                         }
                         try {
-                            BufferedReader r = new BufferedReader(new FileReader(uuidfile));
-                            final String uuid = r.readLine();
+                            final String uuid;
+                            try (BufferedReader readerUuidFile = new BufferedReader(new FileReader(uuidfile))) {
+                                uuid = readerUuidFile.readLine();
+                            }
+
                             final String homedir = System.getProperty("user.home");
                             final File addressfile = new File(homedir + "/.dbus/session-bus",
                                     uuid + "-" + display.replaceAll(":([0-9]*)\\..*", "$1"));
                             if (!addressfile.exists()) {
                                 throw new DBusException(localize("Cannot Resolve Session Bus Address"));
                             }
-                            r = new BufferedReader(new FileReader(addressfile));
-                            String l;
-                            while (null != (l = r.readLine())) {
-                                LOGGER.trace("Reading D-Bus session data: {}", l);
-                                if (l.matches("DBUS_SESSION_BUS_ADDRESS.*")) {
-                                    s = l.replaceAll("^[^=]*=", "");
-                                    LOGGER.trace("Parsing {} to {}", l, s);
+                            try (BufferedReader readerAddressFile = new BufferedReader(new FileReader(addressfile))) {
+                                String l;
+                                while (null != (l = readerAddressFile.readLine())) {
+                                    LOGGER.trace("Reading D-Bus session data: {}", l);
+                                    if (l.matches("DBUS_SESSION_BUS_ADDRESS.*")) {
+                                        s = l.replaceAll("^[^=]*=", "");
+                                        LOGGER.trace("Parsing {} to {}", l, s);
+                                    }
                                 }
                             }
                             if (null == s || "".equals(s)) {

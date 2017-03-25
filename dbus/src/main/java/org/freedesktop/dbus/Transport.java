@@ -842,10 +842,11 @@ public class Transport {
             types = SASL.AUTH_SHA;
             if (null != address.getParameter("listen")) {
                 mode = SASL.MODE_SERVER;
-                final ServerSocket ss = new ServerSocket();
-                ss.bind(new InetSocketAddress(address.getParameter("host"),
-                        Integer.parseInt(address.getParameter("port"))));
-                s = ss.accept();
+                try (final ServerSocket ss = new ServerSocket()) {
+                    ss.bind(new InetSocketAddress(address.getParameter("host"),
+                            Integer.parseInt(address.getParameter("port"))));
+                    s = ss.accept();
+                }
             } else {
                 mode = SASL.MODE_CLIENT;
                 s = new Socket();

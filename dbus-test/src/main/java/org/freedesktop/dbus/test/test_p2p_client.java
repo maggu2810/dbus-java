@@ -20,8 +20,10 @@ import org.freedesktop.dbus.DirectConnection;
 
 public class test_p2p_client {
     public static void main(final String[] args) throws Exception {
-        final BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream("address")));
-        final String address = r.readLine();
+        final String address;
+        try (final BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream("address")))) {
+            address = r.readLine();
+        }
         final DirectConnection dc = new DirectConnection(address);
         System.out.println("Connected");
         final TestRemoteInterface tri = (TestRemoteInterface) dc.getRemoteObject("/Test");

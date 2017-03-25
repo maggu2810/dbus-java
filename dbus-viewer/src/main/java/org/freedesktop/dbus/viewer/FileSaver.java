@@ -127,19 +127,10 @@ final class FileSaver implements Runnable {
      * @throws IOException
      */
     private void writeFile(final File fileToSave, final String contents) throws IOException {
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = new FileWriter(fileToSave);
-            final BufferedWriter writer = new BufferedWriter(fileWriter);
+        try (final FileWriter fileWriter = new FileWriter(fileToSave);
+                final BufferedWriter writer = new BufferedWriter(fileWriter)) {
             writer.append(contents);
             writer.flush();
-        } finally {
-            if (fileWriter != null) {
-                try {
-                    fileWriter.close();
-                } catch (final IOException e1) {
-                }
-            }
         }
     }
 }
