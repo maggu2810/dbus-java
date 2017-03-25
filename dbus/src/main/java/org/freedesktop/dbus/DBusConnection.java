@@ -465,6 +465,7 @@ public class DBusConnection extends AbstractConnection {
             UInt32 rv;
             try {
                 rv = _dbus.ReleaseName(busname);
+                logger.trace("release bus name '{}' returned '{}'", busname, rv);
             } catch (final DBusExecutionException DBEe) {
                 if (EXCEPTION_DEBUG) {
                     logger.error("Exception", DBEe);
