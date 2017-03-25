@@ -110,6 +110,7 @@ public class cross_test_client implements DBus.Binding.TestClient, DBusSigHandle
                     m = t;
                 }
             }
+            assert m != null;
             final Object o = m.invoke(proxy, parameters);
 
             String msg = "Incorrect return value; sent ( ";

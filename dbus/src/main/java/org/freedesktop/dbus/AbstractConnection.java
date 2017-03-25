@@ -910,6 +910,7 @@ public abstract class AbstractConnection {
                     Debug.print(Debug.DEBUG, "Running method " + me + " for remote call");
                 }
                 try {
+                    assert me != null;
                     final Type[] ts = me.getGenericParameterTypes();
                     m.setArgs(Marshalling.deSerializeParameters(m.getParameters(), ts, conn));
                     if (Debug.debug) {

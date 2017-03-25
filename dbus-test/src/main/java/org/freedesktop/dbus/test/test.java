@@ -180,6 +180,7 @@ class testclass
         if (null == n) {
             test.fail("List was null");
         }
+        assert n != null;
         if (n.size() != 3) {
             test.fail("List was wrong size (expected 3, actual " + n.size() + ")");
         }
@@ -195,6 +196,7 @@ class testclass
         if (null == m) {
             test.fail("Map was null");
         }
+        assert m != null;
         if (m.size() != 1) {
             test.fail("Map was wrong size");
         }
@@ -205,6 +207,7 @@ class testclass
         if (null == mus) {
             test.fail("Sub-Map was null");
         }
+        assert mus != null;
         if (mus.size() != 3) {
             test.fail("Sub-Map was wrong size");
         }
