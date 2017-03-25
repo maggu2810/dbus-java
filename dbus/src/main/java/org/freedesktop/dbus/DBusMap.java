@@ -41,7 +41,8 @@ class DBusMap<K, V> implements Map<K, V> {
             if (!(o instanceof DBusMap.Entry)) {
                 return false;
             }
-            return this.entry == ((Entry) o).entry;
+            final DBusMap<?, ?>.Entry other = (DBusMap<?, ?>.Entry) o;
+            return this.entry == other.entry;
         }
 
         @Override
