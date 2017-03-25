@@ -230,6 +230,12 @@ public interface DBus extends DBusInterface {
             this.old_owner = old_owner;
             this.new_owner = new_owner;
         }
+
+        @Override
+        public String toString() {
+            return "NameOwnerChanged [name=" + name + ", old_owner=" + old_owner + ", new_owner=" + new_owner + "]";
+        }
+
     }
 
     /**
@@ -242,6 +248,12 @@ public interface DBus extends DBusInterface {
             super(path, name);
             this.name = name;
         }
+
+        @Override
+        public String toString() {
+            return "NameLost [name=" + name + "]";
+        }
+
     }
 
     /**
@@ -254,6 +266,12 @@ public interface DBus extends DBusInterface {
             super(path, name);
             this.name = name;
         }
+
+        @Override
+        public String toString() {
+            return "NameAcquired [name=" + name + "]";
+        }
+
     }
 
     /**
