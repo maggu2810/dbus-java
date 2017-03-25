@@ -23,6 +23,7 @@ import org.freedesktop.dbus.Path;
 import org.freedesktop.dbus.UInt16;
 
 public class test_p2p_server implements TestRemoteInterface {
+    @Override
     public int[][] teststructstruct(final TestStruct3 in) {
         final List<List<Integer>> lli = in.b;
         final int[][] out = new int[lli.size()][];
@@ -35,57 +36,71 @@ public class test_p2p_server implements TestRemoteInterface {
         return out;
     }
 
+    @Override
     public String getNameAndThrow() {
         return getName();
     }
 
+    @Override
     public String getName() {
         System.out.println("getName called");
         return "Peer2Peer Server";
     }
 
+    @Override
     public <T> int frobnicate(final List<Long> n, final Map<String, Map<UInt16, Short>> m, final T v) {
         return 3;
     }
 
+    @Override
     public void throwme() throws TestException {
         System.out.println("throwme called");
         throw new TestException("BOO");
     }
 
+    @Override
     public void waitawhile() {
         return;
     }
 
+    @Override
     public int overload() {
         return 1;
     }
 
+    @Override
     public void sig(final Type[] s) {
     }
 
+    @Override
     public void newpathtest(final Path p) {
     }
 
+    @Override
     public void reg13291(final byte[] as, final byte[] bs) {
     }
 
+    @Override
     public Path pathrv(final Path a) {
         return a;
     }
 
+    @Override
     public List<Path> pathlistrv(final List<Path> a) {
         return a;
     }
 
+    @Override
     public Map<Path, Path> pathmaprv(final Map<Path, Path> a) {
         return a;
     }
 
+    @Override
     public boolean isRemote() {
         return false;
     }
 
+    @Override
     public float testfloat(final float[] f) {
         System.out.println("got float: " + Arrays.toString(f));
         return f[0];

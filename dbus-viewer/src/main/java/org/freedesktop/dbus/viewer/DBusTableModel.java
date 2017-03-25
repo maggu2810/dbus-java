@@ -30,9 +30,10 @@ class DBusTableModel extends AbstractTableModel {
 
     final String[] columns = { NAME, PATH, USER, OWNER, INTROSPECTABLE };
 
-    private final List<DBusEntry> entries = new ArrayList<DBusEntry>();
+    private final List<DBusEntry> entries = new ArrayList<>();
 
     /** {@inheritDoc} */
+    @Override
     public int getRowCount() {
         return entries.size();
     }
@@ -47,6 +48,7 @@ class DBusTableModel extends AbstractTableModel {
     }
 
     /** {@inheritDoc} */
+    @Override
     public int getColumnCount() {
         return columns.length;
     }
@@ -87,6 +89,7 @@ class DBusTableModel extends AbstractTableModel {
     }
 
     /** {@inheritDoc} */
+    @Override
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         final DBusEntry entry = getEntry(rowIndex);
         final String columnName = getColumnName(columnIndex);

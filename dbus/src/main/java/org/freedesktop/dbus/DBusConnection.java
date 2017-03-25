@@ -59,7 +59,7 @@ public class DBusConnection extends AbstractConnection {
         private final Set<String> addresses;
 
         public PeerSet() {
-            addresses = new TreeSet<String>();
+            addresses = new TreeSet<>();
             try {
                 addSigHandler(new DBusMatchRule(DBus.NameOwnerChanged.class, null, null), this);
             } catch (final DBusException DBe) {
@@ -69,6 +69,7 @@ public class DBusConnection extends AbstractConnection {
             }
         }
 
+        @Override
         public void handle(final DBus.NameOwnerChanged noc) {
             logger.debug("Received dbus signal: {}", noc);
             if ("".equals(noc.new_owner) && addresses.contains(noc.name)) {
@@ -76,6 +77,7 @@ public class DBusConnection extends AbstractConnection {
             }
         }
 
+        @Override
         public boolean add(final String address) {
             logger.debug("Adding {}", address);
             synchronized (addresses) {
@@ -83,22 +85,26 @@ public class DBusConnection extends AbstractConnection {
             }
         }
 
+        @Override
         public boolean addAll(final Collection<? extends String> addresses) {
             synchronized (this.addresses) {
                 return this.addresses.addAll(addresses);
             }
         }
 
+        @Override
         public void clear() {
             synchronized (addresses) {
                 addresses.clear();
             }
         }
 
+        @Override
         public boolean contains(final Object o) {
             return addresses.contains(o);
         }
 
+        @Override
         public boolean containsAll(final Collection<?> os) {
             return addresses.containsAll(os);
         }
@@ -117,14 +123,17 @@ public class DBusConnection extends AbstractConnection {
             return addresses.hashCode();
         }
 
+        @Override
         public boolean isEmpty() {
             return addresses.isEmpty();
         }
 
+        @Override
         public Iterator<String> iterator() {
             return addresses.iterator();
         }
 
+        @Override
         public boolean remove(final Object o) {
             logger.debug("Removing {}", o);
             synchronized (addresses) {
@@ -132,28 +141,33 @@ public class DBusConnection extends AbstractConnection {
             }
         }
 
+        @Override
         public boolean removeAll(final Collection<?> os) {
             synchronized (addresses) {
                 return addresses.removeAll(os);
             }
         }
 
+        @Override
         public boolean retainAll(final Collection<?> os) {
             synchronized (addresses) {
                 return addresses.retainAll(os);
             }
         }
 
+        @Override
         public int size() {
             return addresses.size();
         }
 
+        @Override
         public Object[] toArray() {
             synchronized (addresses) {
                 return addresses.toArray();
             }
         }
 
+        @Override
         public <T> T[] toArray(final T[] a) {
             synchronized (addresses) {
                 return addresses.toArray(a);
@@ -162,6 +176,7 @@ public class DBusConnection extends AbstractConnection {
     }
 
     private class _sighandler implements DBusSigHandler<DBusSignal> {
+        @Override
         public void handle(final DBusSignal s) {
             if (s instanceof org.freedesktop.DBus.Local.Disconnected) {
                 logger.warn("Handling Disconnected signal from bus");
@@ -205,7 +220,7 @@ public class DBusConnection extends AbstractConnection {
 
     private final List<String> busnames;
 
-    private static final Map<Object, DBusConnection> conn = new HashMap<Object, DBusConnection>();
+    private static final Map<Object, DBusConnection> conn = new HashMap<>();
     private int _refcount = 0;
     private final Object _reflock = new Object();
     private final DBus _dbus;
@@ -315,7 +330,7 @@ public class DBusConnection extends AbstractConnection {
     @SuppressWarnings("unchecked")
     private DBusConnection(final String address) throws DBusException {
         super(address);
-        busnames = new Vector<String>();
+        busnames = new Vector<>();
 
         synchronized (_reflock) {
             _refcount = 1;
@@ -366,13 +381,13 @@ public class DBusConnection extends AbstractConnection {
             final String data = intro.Introspect();
             logger.trace("Got introspection data: {}", data);
             final String[] tags = data.split("[<>]");
-            final Vector<String> ifaces = new Vector<String>();
+            final Vector<String> ifaces = new Vector<>();
             for (final String tag : tags) {
                 if (tag.startsWith("interface")) {
                     ifaces.add(tag.replaceAll("^interface *name *= *['\"]([^'\"]*)['\"].*$", "$1"));
                 }
             }
-            final Vector<Class<? extends Object>> ifcs = new Vector<Class<? extends Object>>();
+            final Vector<Class<? extends Object>> ifcs = new Vector<>();
             for (String iface : ifaces) {
                 logger.debug("Trying interface {}", iface);
                 int j = 0;
@@ -507,7 +522,7 @@ public class DBusConnection extends AbstractConnection {
      * Returns all the names owned by this connection.
      */
     public String[] getNames() {
-        final Set<String> names = new TreeSet<String>();
+        final Set<String> names = new TreeSet<>();
         names.addAll(busnames);
         return names.toArray(new String[0]);
     }
@@ -872,7 +887,7 @@ public class DBusConnection extends AbstractConnection {
         synchronized (handledSignals) {
             Vector<DBusSigHandler<? extends DBusSignal>> v = handledSignals.get(key);
             if (null == v) {
-                v = new Vector<DBusSigHandler<? extends DBusSignal>>();
+                v = new Vector<>();
                 v.add(handler);
                 handledSignals.put(key, v);
             } else {
@@ -895,7 +910,8 @@ public class DBusConnection extends AbstractConnection {
                     // Set all pending messages to have an error.
                     try {
                         final Error err = new Error("org.freedesktop.DBus.Local",
-                                "org.freedesktop.DBus.Local.Disconnected", 0, "s", new Object[] { localize("Disconnected") });
+                                "org.freedesktop.DBus.Local.Disconnected", 0, "s",
+                                new Object[] { localize("Disconnected") });
                         synchronized (pendingCalls) {
                             final long[] set = pendingCalls.getKeys();
                             for (final long l : set) {

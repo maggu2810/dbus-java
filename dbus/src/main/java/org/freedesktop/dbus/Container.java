@@ -24,7 +24,7 @@ import org.freedesktop.dbus.exceptions.DBusException;
  * and holds common methods.
  */
 abstract class Container {
-    private static Map<Type, Type[]> typecache = new HashMap<Type, Type[]>();
+    private static Map<Type, Type[]> typecache = new HashMap<>();
 
     static void putTypeCache(final Type k, final Type[] v) {
         typecache.put(k, v);

@@ -116,13 +116,13 @@ public class DirectConnection extends AbstractConnection {
             final DBus.Introspectable intro = (DBus.Introspectable) getRemoteObject(path, DBus.Introspectable.class);
             final String data = intro.Introspect();
             final String[] tags = data.split("[<>]");
-            final Vector<String> ifaces = new Vector<String>();
+            final Vector<String> ifaces = new Vector<>();
             for (final String tag : tags) {
                 if (tag.startsWith("interface")) {
                     ifaces.add(tag.replaceAll("^interface *name *= *['\"]([^'\"]*)['\"].*$", "$1"));
                 }
             }
-            final Vector<Class<? extends Object>> ifcs = new Vector<Class<? extends Object>>();
+            final Vector<Class<? extends Object>> ifcs = new Vector<>();
             for (String iface : ifaces) {
                 int j = 0;
                 while (j >= 0) {
@@ -153,8 +153,9 @@ public class DirectConnection extends AbstractConnection {
             if (EXCEPTION_DEBUG) {
                 logger.error("Exception", e);
             }
-            throw new DBusException(MessageFormat.format(localize("Failed to create proxy object for {0}; reason: {1}."),
-                    new Object[] { path, e.getMessage() }));
+            throw new DBusException(
+                    MessageFormat.format(localize("Failed to create proxy object for {0}; reason: {1}."),
+                            new Object[] { path, e.getMessage() }));
         }
     }
 
@@ -273,7 +274,7 @@ public class DirectConnection extends AbstractConnection {
         synchronized (handledSignals) {
             Vector<DBusSigHandler<? extends DBusSignal>> v = handledSignals.get(key);
             if (null == v) {
-                v = new Vector<DBusSigHandler<? extends DBusSignal>>();
+                v = new Vector<>();
                 v.add(handler);
                 handledSignals.put(key, v);
             } else {

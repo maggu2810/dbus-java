@@ -37,13 +37,14 @@ public class DBusSignal extends Message {
         super(Message.Endian.BIG, Message.MessageType.SIGNAL, (byte) 0);
 
         if (null == path || null == member || null == iface) {
-            throw new MessageFormatException(localize("Must specify object path, interface and signal name to Signals."));
+            throw new MessageFormatException(
+                    localize("Must specify object path, interface and signal name to Signals."));
         }
         headers.put(Message.HeaderField.PATH, path);
         headers.put(Message.HeaderField.MEMBER, member);
         headers.put(Message.HeaderField.INTERFACE, iface);
 
-        final Vector<Object> hargs = new Vector<Object>();
+        final Vector<Object> hargs = new Vector<>();
         hargs.add(new Object[] { Message.HeaderField.PATH, new Object[] { ArgumentType.OBJECT_PATH_STRING, path } });
         hargs.add(new Object[] { Message.HeaderField.INTERFACE, new Object[] { ArgumentType.STRING_STRING, iface } });
         hargs.add(new Object[] { Message.HeaderField.MEMBER, new Object[] { ArgumentType.STRING_STRING, member } });
@@ -80,11 +81,11 @@ public class DBusSignal extends Message {
         }
     }
 
-    private static Map<Class<? extends DBusSignal>, Type[]> typeCache = new HashMap<Class<? extends DBusSignal>, Type[]>();
-    private static Map<String, Class<? extends DBusSignal>> classCache = new HashMap<String, Class<? extends DBusSignal>>();
-    private static Map<Class<? extends DBusSignal>, Constructor<? extends DBusSignal>> conCache = new HashMap<Class<? extends DBusSignal>, Constructor<? extends DBusSignal>>();
-    private static Map<String, String> signames = new HashMap<String, String>();
-    private static Map<String, String> intnames = new HashMap<String, String>();
+    private static Map<Class<? extends DBusSignal>, Type[]> typeCache = new HashMap<>();
+    private static Map<String, Class<? extends DBusSignal>> classCache = new HashMap<>();
+    private static Map<Class<? extends DBusSignal>, Constructor<? extends DBusSignal>> conCache = new HashMap<>();
+    private static Map<String, String> signames = new HashMap<>();
+    private static Map<String, String> intnames = new HashMap<>();
     private Class<? extends DBusSignal> c;
     private boolean bodydone = false;
     private byte[] blen;
@@ -237,7 +238,7 @@ public class DBusSignal extends Message {
         headers.put(Message.HeaderField.MEMBER, member);
         headers.put(Message.HeaderField.INTERFACE, iface);
 
-        final Vector<Object> hargs = new Vector<Object>();
+        final Vector<Object> hargs = new Vector<>();
         hargs.add(new Object[] { Message.HeaderField.PATH,
                 new Object[] { ArgumentType.OBJECT_PATH_STRING, objectpath } });
         hargs.add(new Object[] { Message.HeaderField.INTERFACE, new Object[] { ArgumentType.STRING_STRING, iface } });

@@ -24,6 +24,7 @@ import org.freedesktop.dbus.UInt32;
 class ProfileHandler implements DBusSigHandler<Profiler.ProfileSignal> {
     public int c = 0;
 
+    @Override
     public void handle(final Profiler.ProfileSignal s) {
         if (0 == c++ % profile.SIGNAL_INNER) {
             System.out.print("-");
@@ -206,7 +207,7 @@ public class profile {
                 conn.exportObject("/Profiler", pi);
                 final Profiler p = conn.getRemoteObject("org.freedesktop.DBus.java.profiler", "/Profiler",
                         Profiler.class);
-                final HashMap<String, String> m = new HashMap<String, String>();
+                final HashMap<String, String> m = new HashMap<>();
                 for (int i = 0; i < MAP_LENGTH; i++) {
                     m.put("" + i, "hello");
                 }
@@ -232,7 +233,7 @@ public class profile {
                 conn.exportObject("/Profiler", pi);
                 final Profiler p = conn.getRemoteObject("org.freedesktop.DBus.java.profiler", "/Profiler",
                         Profiler.class);
-                final Vector<String> v = new Vector<String>();
+                final Vector<String> v = new Vector<>();
                 for (int i = 0; i < LIST_LENGTH; i++) {
                     v.add("hello " + i);
                 }

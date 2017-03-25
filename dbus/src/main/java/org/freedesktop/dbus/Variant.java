@@ -84,8 +84,9 @@ public class Variant<T> {
             if (AbstractConnection.EXCEPTION_DEBUG) {
                 logger.error("Exception", DBe);
             }
-            throw new IllegalArgumentException(MessageFormat.format(
-                    localize("Can't wrap {0} in an unqualified Variant ({1})."), new Object[] { type, DBe.getMessage() }));
+            throw new IllegalArgumentException(
+                    MessageFormat.format(localize("Can't wrap {0} in an unqualified Variant ({1})."),
+                            new Object[] { type, DBe.getMessage() }));
         }
         this.o = o;
     }
@@ -103,7 +104,7 @@ public class Variant<T> {
         }
         this.sig = sig;
         try {
-            final Vector<Type> ts = new Vector<Type>();
+            final Vector<Type> ts = new Vector<>();
             Marshalling.getJavaType(sig, ts, 1);
             if (ts.size() != 1) {
                 throw new IllegalArgumentException(localize("Can't wrap multiple or no types in a Variant: ") + sig);
@@ -113,8 +114,9 @@ public class Variant<T> {
             if (AbstractConnection.EXCEPTION_DEBUG) {
                 logger.error("Exception", DBe);
             }
-            throw new IllegalArgumentException(MessageFormat.format(
-                    localize("Can't wrap {0} in an unqualified Variant ({1})."), new Object[] { sig, DBe.getMessage() }));
+            throw new IllegalArgumentException(
+                    MessageFormat.format(localize("Can't wrap {0} in an unqualified Variant ({1})."),
+                            new Object[] { sig, DBe.getMessage() }));
         }
         this.o = o;
     }

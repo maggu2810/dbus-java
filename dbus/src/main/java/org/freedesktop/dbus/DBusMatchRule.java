@@ -25,7 +25,7 @@ public class DBusMatchRule {
     private String member;
     private String object;
     private String source;
-    private static HashMap<String, Class<? extends DBusSignal>> signalTypeMap = new HashMap<String, Class<? extends DBusSignal>>();
+    private static HashMap<String, Class<? extends DBusSignal>> signalTypeMap = new HashMap<>();
 
     static Class<? extends DBusSignal> getCachedSignalType(final String type) {
         return signalTypeMap.get(type);

@@ -17,7 +17,7 @@ import java.util.Map;
 
 class StructStruct {
     public static Map<StructStruct, Type[]> fillPackages(final Map<StructStruct, Type[]> structs, final String pack) {
-        final Map<StructStruct, Type[]> newmap = new HashMap<StructStruct, Type[]>();
+        final Map<StructStruct, Type[]> newmap = new HashMap<>();
         for (final StructStruct ss : structs.keySet()) {
             final Type[] type = structs.get(ss);
             if (null == ss.pack) {

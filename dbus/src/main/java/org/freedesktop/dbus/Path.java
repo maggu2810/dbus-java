@@ -37,6 +37,7 @@ public class Path implements Comparable<Path> {
         return path.hashCode();
     }
 
+    @Override
     public int compareTo(final Path that) {
         return path.compareTo(that.path);
     }

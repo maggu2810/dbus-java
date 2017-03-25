@@ -46,10 +46,12 @@ import org.freedesktop.dbus.exceptions.DBusExecutionException;
 import org.freedesktop.dbus.exceptions.NotConnected;
 
 class testnewclass implements TestNewInterface {
+    @Override
     public boolean isRemote() {
         return false;
     }
 
+    @Override
     public String getName() {
         return toString();
     }
@@ -63,10 +65,12 @@ class testclass
         this.conn = conn;
     }
 
+    @Override
     public String Introspect() {
         return "Not XML";
     }
 
+    @Override
     public int[][] teststructstruct(final TestStruct3 in) {
         final List<List<Integer>> lli = in.b;
         final int[][] out = new int[lli.size()][];
@@ -79,6 +83,7 @@ class testclass
         return out;
     }
 
+    @Override
     public float testfloat(final float[] f) {
         if (f.length < 4 || f[0] != 17.093f || f[1] != -23f || f[2] != 0.0f || f[3] != 31.42f) {
             test.fail("testfloat got incorrect array");
@@ -86,12 +91,14 @@ class testclass
         return f[0];
     }
 
+    @Override
     public void newpathtest(final Path p) {
         if (!p.toString().equals("/new/path/test")) {
             test.fail("new path test got wrong path");
         }
     }
 
+    @Override
     public void waitawhile() {
         System.out.println("Sleeping.");
         try {
@@ -101,17 +108,19 @@ class testclass
         System.out.println("Done sleeping.");
     }
 
+    @Override
     public <A> TestTuple<String, List<Integer>, Boolean> show(final A in) {
         System.out.println("Showing Stuff: " + in.getClass() + "(" + in + ")");
         if (!(in instanceof Integer) || ((Integer) in).intValue() != 234) {
             test.fail("show received the wrong arguments");
         }
         final DBusCallInfo info = DBusConnection.getCallInfo();
-        final List<Integer> l = new Vector<Integer>();
+        final List<Integer> l = new Vector<>();
         l.add(1953);
-        return new TestTuple<String, List<Integer>, Boolean>(info.getSource(), l, true);
+        return new TestTuple<>(info.getSource(), l, true);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T dostuff(final TestStruct foo) {
         System.out.println("Doing Stuff " + foo);
@@ -125,11 +134,13 @@ class testclass
     }
 
     /** Local classes MUST implement this to return false */
+    @Override
     public boolean isRemote() {
         return false;
     }
 
     /** The method we are exporting to the Bus. */
+    @Override
     public List<Integer> sampleArray(final List<String> ss, final Integer[] is, final long[] ls) {
         System.out.println("Got an array:");
         for (final String s : ss) {
@@ -154,7 +165,7 @@ class testclass
         if (ls.length != 4 || ls[0] != 2 || ls[1] != 6 || ls[2] != 8 || ls[3] != 12) {
             test.fail("sampleArray, Integer array contents incorrect");
         }
-        final Vector<Integer> v = new Vector<Integer>();
+        final Vector<Integer> v = new Vector<>();
         v.add(-1);
         v.add(-5);
         v.add(-7);
@@ -163,19 +174,23 @@ class testclass
         return v;
     }
 
+    @Override
     public String getName() {
         return "This Is A UTF-8 Name: س !!";
     }
 
+    @Override
     public String getNameAndThrow() throws TestException {
         throw new TestException("test");
     }
 
+    @Override
     public boolean check() {
         System.out.println("Being checked");
         return false;
     }
 
+    @Override
     public <T> int frobnicate(final List<Long> n, final Map<String, Map<UInt16, Short>> m, final T v) {
         if (null == n) {
             test.fail("List was null");
@@ -223,6 +238,7 @@ class testclass
         return -5;
     }
 
+    @Override
     public DBusInterface getThis(final DBusInterface t) {
         if (!t.equals(this)) {
             test.fail("Didn't get this properly");
@@ -230,10 +246,12 @@ class testclass
         return this;
     }
 
+    @Override
     public void throwme() throws TestException {
         throw new TestException("test");
     }
 
+    @Override
     public TestSerializable<String> testSerializable(final byte b, final TestSerializable<String> s, final int i) {
         System.out.println("Recieving TestSerializable: " + s);
         if (b != 12 || i != 13 || !(s.getInt() == 1) || !s.getString().equals("woo") || !(s.getVector().size() == 3)
@@ -243,6 +261,7 @@ class testclass
         return s;
     }
 
+    @Override
     public String recursionTest() {
         try {
             final TestRemoteInterface tri = conn.getRemoteObject("foo.bar.Test", "/Test", TestRemoteInterface.class);
@@ -253,14 +272,17 @@ class testclass
         }
     }
 
+    @Override
     public int overload(final String s) {
         return 1;
     }
 
+    @Override
     public int overload(final byte b) {
         return 2;
     }
 
+    @Override
     public int overload() {
         final DBusCallInfo info = DBusConnection.getCallInfo();
         if ("org.freedesktop.dbus.test.AlternateTestInterface".equals(info.getInterface())) {
@@ -272,10 +294,12 @@ class testclass
         }
     }
 
+    @Override
     public List<List<Integer>> checklist(final List<List<Integer>> lli) {
         return lli;
     }
 
+    @Override
     public TestNewInterface getNew() {
         final testnewclass n = new testnewclass();
         try {
@@ -286,6 +310,7 @@ class testclass
         return n;
     }
 
+    @Override
     public void sig(final Type[] s) {
         if (s.length != 2 || !s[0].equals(Byte.class) || !(s[1] instanceof ParameterizedType)
                 || !Map.class.equals(((ParameterizedType) s[1]).getRawType())
@@ -296,6 +321,7 @@ class testclass
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void complexv(final Variant<? extends Object> v) {
         if (!"a{ss}".equals(v.getSig()) || !(v.getValue() instanceof Map)
@@ -305,6 +331,7 @@ class testclass
         }
     }
 
+    @Override
     public void reg13291(final byte[] as, final byte[] bs) {
         if (as.length != bs.length) {
             test.fail("didn't receive identical byte arrays");
@@ -316,26 +343,32 @@ class testclass
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <A> A Get(final String interface_name, final String property_name) {
         return (A) new Path("/nonexistant/path");
     }
 
+    @Override
     public <A> void Set(final String interface_name, final String property_name, final A value) {
     }
 
+    @Override
     public Map<String, Variant> GetAll(final String interface_name) {
-        return new HashMap<String, Variant>();
+        return new HashMap<>();
     }
 
+    @Override
     public Path pathrv(final Path a) {
         return a;
     }
 
+    @Override
     public List<Path> pathlistrv(final List<Path> a) {
         return a;
     }
 
+    @Override
     public Map<Path, Path> pathmaprv(final Map<Path, Path> a) {
         return a;
     }
@@ -346,6 +379,7 @@ class testclass
  */
 class renamedsignalhandler implements DBusSigHandler<TestSignalInterface2.TestRenamedSignal> {
     /** Handling a signal */
+    @Override
     public void handle(final TestSignalInterface2.TestRenamedSignal t) {
         if (false == test.done5) {
             test.done5 = true;
@@ -365,6 +399,7 @@ class renamedsignalhandler implements DBusSigHandler<TestSignalInterface2.TestRe
  */
 class emptysignalhandler implements DBusSigHandler<TestSignalInterface.EmptySignal> {
     /** Handling a signal */
+    @Override
     public void handle(final TestSignalInterface.EmptySignal t) {
         if (false == test.done7) {
             test.done7 = true;
@@ -388,6 +423,7 @@ class disconnecthandler implements DBusSigHandler<DBus.Local.Disconnected> {
     }
 
     /** Handling a signal */
+    @Override
     public void handle(final DBus.Local.Disconnected t) {
         if (false == test.done6) {
             test.done6 = true;
@@ -407,6 +443,7 @@ class disconnecthandler implements DBusSigHandler<DBus.Local.Disconnected> {
  */
 class pathsignalhandler implements DBusSigHandler<TestSignalInterface.TestPathSignal> {
     /** Handling a signal */
+    @Override
     public void handle(final TestSignalInterface.TestPathSignal t) {
         System.out.println("Path sighandler: " + t);
     }
@@ -417,6 +454,7 @@ class pathsignalhandler implements DBusSigHandler<TestSignalInterface.TestPathSi
  */
 class signalhandler implements DBusSigHandler<TestSignalInterface.TestSignal> {
     /** Handling a signal */
+    @Override
     public void handle(final TestSignalInterface.TestSignal t) {
         if (false == test.done1) {
             test.done1 = true;
@@ -436,6 +474,7 @@ class signalhandler implements DBusSigHandler<TestSignalInterface.TestSignal> {
  */
 class arraysignalhandler implements DBusSigHandler<TestSignalInterface.TestArraySignal> {
     /** Handling a signal */
+    @Override
     public void handle(final TestSignalInterface.TestArraySignal t) {
         try {
             if (false == test.done2) {
@@ -481,6 +520,7 @@ class arraysignalhandler implements DBusSigHandler<TestSignalInterface.TestArray
  * Object path signal handler
  */
 class objectsignalhandler implements DBusSigHandler<TestSignalInterface.TestObjectSignal> {
+    @Override
     public void handle(final TestSignalInterface.TestObjectSignal s) {
         if (false == test.done3) {
             test.done3 = true;
@@ -496,6 +536,7 @@ class objectsignalhandler implements DBusSigHandler<TestSignalInterface.TestObje
  */
 class badarraysignalhandler<T extends DBusSignal> implements DBusSigHandler<T> {
     /** Handling a signal */
+    @Override
     public void handle(final T s) {
         test.fail("This signal handler shouldn't be called");
     }
@@ -505,6 +546,7 @@ class badarraysignalhandler<T extends DBusSignal> implements DBusSigHandler<T> {
  * Callback handler
  */
 class callbackhandler implements CallbackHandler<String> {
+    @Override
     public void handle(final String r) {
         System.out.println("Handling callback: " + r);
         final Collator col = Collator.getInstance();
@@ -519,6 +561,7 @@ class callbackhandler implements CallbackHandler<String> {
         test.done4 = true;
     }
 
+    @Override
     public void handleError(final DBusExecutionException e) {
         System.out.println("Handling error callback: " + e + " message = '" + e.getMessage() + "'");
         if (!(e instanceof TestException)) {
@@ -595,7 +638,7 @@ public class test {
                         new arraysignalhandler());
                 clientconn.addSigHandler(TestSignalInterface.TestObjectSignal.class, new objectsignalhandler());
                 clientconn.addSigHandler(TestSignalInterface.TestPathSignal.class, new pathsignalhandler());
-                final badarraysignalhandler<TestSignalInterface.TestSignal> bash = new badarraysignalhandler<TestSignalInterface.TestSignal>();
+                final badarraysignalhandler<TestSignalInterface.TestSignal> bash = new badarraysignalhandler<>();
                 clientconn.addSigHandler(TestSignalInterface.TestSignal.class, bash);
                 clientconn.removeSigHandler(TestSignalInterface.TestSignal.class, bash);
                 System.out.println("done");
@@ -688,14 +731,14 @@ public class test {
             if (!path.equals(p)) {
                 fail("pathrv incorrect");
             }
-            final List<Path> paths = new Vector<Path>();
+            final List<Path> paths = new Vector<>();
             paths.add(path);
             final List<Path> ps = tri.pathlistrv(paths);
             System.out.println(paths.toString() + " => " + ps.toString());
             if (!paths.equals(ps)) {
                 fail("pathlistrv incorrect");
             }
-            final Map<Path, Path> pathm = new HashMap<Path, Path>();
+            final Map<Path, Path> pathm = new HashMap<>();
             pathm.put(path, path);
             final Map<Path, Path> pm = tri.pathmaprv(pathm);
             System.out.println(pathm.toString() + " => " + pm.toString());
@@ -724,16 +767,15 @@ public class test {
                 fail("testfloat returned the wrong thing");
             }
             System.out.println("Structs of Structs");
-            List<List<Integer>> lli = new Vector<List<Integer>>();
-            List<Integer> li = new Vector<Integer>();
+            List<List<Integer>> lli = new Vector<>();
+            List<Integer> li = new Vector<>();
             li.add(1);
             li.add(2);
             li.add(3);
             lli.add(li);
             lli.add(li);
             lli.add(li);
-            final TestStruct3 ts3 = new TestStruct3(new TestStruct2(new Vector<String>(), new Variant<Integer>(0)),
-                    lli);
+            final TestStruct3 ts3 = new TestStruct3(new TestStruct2(new Vector<String>(), new Variant<>(0)), lli);
             final int[][] out = tri.teststructstruct(ts3);
             if (out.length != 3) {
                 fail("teststructstruct returned the wrong thing: " + Arrays.deepToString(out));
@@ -745,15 +787,15 @@ public class test {
             }
 
             System.out.println("frobnicating");
-            final List<Long> ls = new Vector<Long>();
+            final List<Long> ls = new Vector<>();
             ls.add(2L);
             ls.add(5L);
             ls.add(71L);
-            final Map<UInt16, Short> mus = new HashMap<UInt16, Short>();
+            final Map<UInt16, Short> mus = new HashMap<>();
             mus.put(new UInt16(4), (short) 5);
             mus.put(new UInt16(5), (short) 6);
             mus.put(new UInt16(6), (short) 7);
-            final Map<String, Map<UInt16, Short>> msmus = new HashMap<String, Map<UInt16, Short>>();
+            final Map<String, Map<UInt16, Short>> msmus = new HashMap<>();
             msmus.put("stuff", mus);
             final int rint = tri.frobnicate(ls, msmus, 13);
             if (-5 != rint) {
@@ -778,7 +820,7 @@ public class test {
             }
 
             /* Test type signatures */
-            final Vector<Type> ts = new Vector<Type>();
+            final Vector<Type> ts = new Vector<>();
             Marshalling.getJavaType("ya{si}", ts, -1);
             tri.sig(ts.toArray(new Type[0]));
 
@@ -855,14 +897,14 @@ public class test {
 
             System.out.println("Doing stuff asynchronously");
             final DBusAsyncReply<Boolean> stuffreply = clientconn.callMethodAsync(tri2, "dostuff",
-                    new TestStruct("bar", new UInt32(52), new Variant<Boolean>(new Boolean(true))));
+                    new TestStruct("bar", new UInt32(52), new Variant<>(new Boolean(true))));
 
             System.out.println("Checking bools");
             if (tri2.check()) {
                 fail("bools are broken");
             }
 
-            final List<String> l = new Vector<String>();
+            final List<String> l = new Vector<>();
             l.add("hi");
             l.add("hello");
             l.add("hej");
@@ -895,21 +937,21 @@ public class test {
              * This creates an instance of the Test Signal, with the given object path, signal name and parameters, and
              * broadcasts in on the Bus.
              */
-            final List<TestStruct2> tsl = new Vector<TestStruct2>();
-            tsl.add(new TestStruct2(l, new Variant<UInt64>(new UInt64(567))));
-            final Map<UInt32, TestStruct2> tsm = new HashMap<UInt32, TestStruct2>();
-            tsm.put(new UInt32(1), new TestStruct2(l, new Variant<UInt64>(new UInt64(678))));
-            tsm.put(new UInt32(42), new TestStruct2(l, new Variant<UInt64>(new UInt64(789))));
+            final List<TestStruct2> tsl = new Vector<>();
+            tsl.add(new TestStruct2(l, new Variant<>(new UInt64(567))));
+            final Map<UInt32, TestStruct2> tsm = new HashMap<>();
+            tsm.put(new UInt32(1), new TestStruct2(l, new Variant<>(new UInt64(678))));
+            tsm.put(new UInt32(42), new TestStruct2(l, new Variant<>(new UInt64(789))));
             serverconn.sendSignal(new TestSignalInterface.TestArraySignal("/Test", tsl, tsm));
 
             System.out.println("done");
 
             System.out.print("testing custom serialization...");
-            final Vector<Integer> v = new Vector<Integer>();
+            final Vector<Integer> v = new Vector<>();
             v.add(1);
             v.add(2);
             v.add(3);
-            TestSerializable<String> s = new TestSerializable<String>(1, "woo", v);
+            TestSerializable<String> s = new TestSerializable<>(1, "woo", v);
             s = tri2.testSerializable((byte) 12, s, 13);
             System.out.print("returned: " + s);
             if (s.getInt() != 1 || !s.getString().equals("woo") || s.getVector().size() != 3
@@ -958,8 +1000,8 @@ public class test {
             System.out.println("done");
 
             System.out.print("Testing nested lists...");
-            lli = new Vector<List<Integer>>();
-            li = new Vector<Integer>();
+            lli = new Vector<>();
+            li = new Vector<>();
             li.add(1);
             lli.add(li);
             final List<List<Integer>> reti = tri2.checklist(lli);

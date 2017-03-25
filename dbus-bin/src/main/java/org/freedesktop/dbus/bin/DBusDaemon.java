@@ -92,8 +92,8 @@ public class DBusDaemon extends Thread {
         private final String name;
 
         public MagicMap(final String name) {
-            m = new HashMap<A, LinkedList<B>>();
-            q = new LinkedList<A>();
+            m = new HashMap<>();
+            q = new LinkedList<>();
             this.name = name;
         }
 
@@ -106,7 +106,7 @@ public class DBusDaemon extends Thread {
             if (m.containsKey(a)) {
                 m.get(a).add(b);
             } else {
-                final LinkedList<B> l = new LinkedList<B>();
+                final LinkedList<B> l = new LinkedList<>();
                 l.add(b);
                 m.put(a, l);
             }
@@ -118,7 +118,7 @@ public class DBusDaemon extends Thread {
             if (m.containsKey(a)) {
                 m.get(a).add(b);
             } else {
-                final LinkedList<B> l = new LinkedList<B>();
+                final LinkedList<B> l = new LinkedList<>();
                 l.add(b);
                 m.put(a, l);
             }
@@ -144,15 +144,18 @@ public class DBusDaemon extends Thread {
         public Connstruct c;
         public Message m;
 
+        @Override
         public boolean isRemote() {
             return false;
         }
 
+        @Override
         public String Hello() {
             LOGGER.debug("enter");
             synchronized (c) {
                 if (null != c.unique) {
-                    throw new org.freedesktop.DBus.Error.AccessDenied(localize("Connection has already sent a Hello message"));
+                    throw new org.freedesktop.DBus.Error.AccessDenied(
+                            localize("Connection has already sent a Hello message"));
                 }
                 synchronized (unique_lock) {
                     c.unique = ":1." + (++next_unique);
@@ -179,6 +182,7 @@ public class DBusDaemon extends Thread {
             return c.unique;
         }
 
+        @Override
         public String[] ListNames() {
             LOGGER.debug("enter");
             String[] ns;
@@ -190,6 +194,7 @@ public class DBusDaemon extends Thread {
             return ns;
         }
 
+        @Override
         public boolean NameHasOwner(final String name) {
             LOGGER.debug("enter");
             boolean rv;
@@ -200,6 +205,7 @@ public class DBusDaemon extends Thread {
             return rv;
         }
 
+        @Override
         public String GetNameOwner(final String name) {
             LOGGER.debug("enter");
             final Connstruct owner = names.get(name);
@@ -213,18 +219,21 @@ public class DBusDaemon extends Thread {
             return o;
         }
 
+        @Override
         public UInt32 GetConnectionUnixUser(final String connection_name) {
             LOGGER.debug("enter");
             LOGGER.debug("exit");
             return new UInt32(0);
         }
 
+        @Override
         public UInt32 StartServiceByName(final String name, final UInt32 flags) {
             LOGGER.debug("enter");
             LOGGER.debug("exit");
             return new UInt32(0);
         }
 
+        @Override
         public UInt32 RequestName(final String name, final UInt32 flags) {
             LOGGER.debug("enter");
 
@@ -257,6 +266,7 @@ public class DBusDaemon extends Thread {
             return new UInt32(rv);
         }
 
+        @Override
         public UInt32 ReleaseName(final String name) {
             LOGGER.debug("enter");
 
@@ -289,6 +299,7 @@ public class DBusDaemon extends Thread {
             return new UInt32(rv);
         }
 
+        @Override
         public void AddMatch(final String matchrule) throws Error.MatchRuleInvalid {
             LOGGER.debug("enter");
             LOGGER.trace("Adding match rule: " + matchrule);
@@ -301,6 +312,7 @@ public class DBusDaemon extends Thread {
             return;
         }
 
+        @Override
         public void RemoveMatch(final String matchrule) throws Error.MatchRuleInvalid {
             LOGGER.debug("enter");
             LOGGER.trace("Removing match rule: " + matchrule);
@@ -308,24 +320,28 @@ public class DBusDaemon extends Thread {
             return;
         }
 
+        @Override
         public String[] ListQueuedOwners(final String name) {
             LOGGER.debug("enter");
             LOGGER.debug("exit");
             return new String[0];
         }
 
+        @Override
         public UInt32 GetConnectionUnixProcessID(final String connection_name) {
             LOGGER.debug("enter");
             LOGGER.debug("exit");
             return new UInt32(0);
         }
 
+        @Override
         public Byte[] GetConnectionSELinuxSecurityContext(final String a) {
             LOGGER.debug("enter");
             LOGGER.debug("exit");
             return new Byte[0];
         }
 
+        @Override
         public void ReloadConfig() {
             LOGGER.debug("enter");
             LOGGER.debug("exit");
@@ -392,6 +408,7 @@ public class DBusDaemon extends Thread {
             LOGGER.debug("exit");
         }
 
+        @Override
         public String Introspect() {
             return "<!DOCTYPE node PUBLIC \"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN\"\n"
                     + "\"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd\">\n" + "<node>\n"
@@ -432,6 +449,7 @@ public class DBusDaemon extends Thread {
                     + "  </interface>\n" + "</node>";
         }
 
+        @Override
         public void Ping() {
         }
 
@@ -530,7 +548,7 @@ public class DBusDaemon extends Thread {
 
         public Reader(final Connstruct conn) {
             this.conn = conn;
-            weakconn = new WeakReference<Connstruct>(conn);
+            weakconn = new WeakReference<>(conn);
             setName("Reader");
         }
 
@@ -573,15 +591,12 @@ public class DBusDaemon extends Thread {
         }
     }
 
-    private final Map<Connstruct, Reader> conns = new HashMap<Connstruct, Reader>();
-    private final HashMap<String, Connstruct> names = new HashMap<String, Connstruct>();
-    private final MagicMap<Message, WeakReference<Connstruct>> outqueue = new MagicMap<Message, WeakReference<Connstruct>>(
-            "out");
-    private final MagicMap<Message, WeakReference<Connstruct>> inqueue = new MagicMap<Message, WeakReference<Connstruct>>(
-            "in");
-    private final MagicMap<Message, WeakReference<Connstruct>> localqueue = new MagicMap<Message, WeakReference<Connstruct>>(
-            "local");
-    private final List<Connstruct> sigrecips = new Vector<Connstruct>();
+    private final Map<Connstruct, Reader> conns = new HashMap<>();
+    private final HashMap<String, Connstruct> names = new HashMap<>();
+    private final MagicMap<Message, WeakReference<Connstruct>> outqueue = new MagicMap<>("out");
+    private final MagicMap<Message, WeakReference<Connstruct>> inqueue = new MagicMap<>("in");
+    private final MagicMap<Message, WeakReference<Connstruct>> localqueue = new MagicMap<>("local");
+    private final List<Connstruct> sigrecips = new Vector<>();
     private boolean _run = true;
     private int next_unique = 0;
     private final Object unique_lock = new Object();
@@ -620,9 +635,9 @@ public class DBusDaemon extends Thread {
                 synchronized (outqueue) {
                     for (final Connstruct d : conns.keySet()) {
                         if (head) {
-                            outqueue.putFirst(m, new WeakReference<Connstruct>(d));
+                            outqueue.putFirst(m, new WeakReference<>(d));
                         } else {
-                            outqueue.putLast(m, new WeakReference<Connstruct>(d));
+                            outqueue.putLast(m, new WeakReference<>(d));
                         }
                     }
                     outqueue.notifyAll();
@@ -631,9 +646,9 @@ public class DBusDaemon extends Thread {
         } else {
             synchronized (outqueue) {
                 if (head) {
-                    outqueue.putFirst(m, new WeakReference<Connstruct>(c));
+                    outqueue.putFirst(m, new WeakReference<>(c));
                 } else {
-                    outqueue.putLast(m, new WeakReference<Connstruct>(c));
+                    outqueue.putLast(m, new WeakReference<>(c));
                 }
                 outqueue.notifyAll();
             }
@@ -646,7 +661,7 @@ public class DBusDaemon extends Thread {
         LOGGER.debug("enter");
         List<Connstruct> l;
         synchronized (sigrecips) {
-            l = new Vector<Connstruct>(sigrecips);
+            l = new Vector<>(sigrecips);
         }
         LOGGER.debug("exit");
         return l;
@@ -755,7 +770,7 @@ public class DBusDaemon extends Thread {
             } catch (final IOException IOe) {
             }
             synchronized (names) {
-                final List<String> toRemove = new Vector<String>();
+                final List<String> toRemove = new Vector<>();
                 for (final String name : names.keySet()) {
                     if (names.get(name) == c) {
                         toRemove.add(name);

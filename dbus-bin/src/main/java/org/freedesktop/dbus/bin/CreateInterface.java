@@ -120,7 +120,7 @@ public class CreateInterface {
         if (null == dbus || "".equals(dbus)) {
             return "";
         }
-        final Vector<Type> v = new Vector<Type>();
+        final Vector<Type> v = new Vector<>();
         final int c = Marshalling.getJavaType(dbus, v, 1);
         final Type t = v.get(0);
         return collapseType(t, imports, structs, container, fullnames);
@@ -173,8 +173,8 @@ public class CreateInterface {
     String parseMethod(final Element meth, final Set<String> imports, final Map<String, Integer> tuples,
             final Map<StructStruct, Type[]> structs, final Set<String> exceptions, final Set<String> anns)
             throws DBusException {
-        final Vector<Element> in = new Vector<Element>();
-        final Vector<Element> out = new Vector<Element>();
+        final Vector<Element> in = new Vector<>();
+        final Vector<Element> out = new Vector<>();
         if (null == meth.getAttribute("name") || "".equals(meth.getAttribute("name"))) {
             System.err.println(localize("ERROR: Method name was blank, failed"));
             System.exit(1);
@@ -236,8 +236,8 @@ public class CreateInterface {
 
     String parseSignal(final Element signal, final Set<String> imports, final Map<StructStruct, Type[]> structs,
             final Set<String> anns) throws DBusException {
-        final Map<String, String> params = new HashMap<String, String>();
-        final Vector<String> porder = new Vector<String>();
+        final Map<String, String> params = new HashMap<>();
+        final Vector<String> porder = new Vector<>();
         char defaultname = 'a';
         imports.add("org.freedesktop.dbus.DBusSignal");
         imports.add("org.freedesktop.dbus.exceptions.DBusException");
@@ -312,7 +312,7 @@ public class CreateInterface {
         String methods = "";
         String signals = "";
         String annotations = "";
-        final Set<String> imports = new TreeSet<String>();
+        final Set<String> imports = new TreeSet<>();
         imports.add("org.freedesktop.dbus.DBusInterface");
         for (final Node meth : new IterableNodeList(iface.getChildNodes())) {
 
@@ -376,10 +376,10 @@ public class CreateInterface {
             final Map<StructStruct, Type[]> existing) throws DBusException, IOException {
         out.println("package " + pack + ";");
 
-        final Set<String> imports = new TreeSet<String>();
+        final Set<String> imports = new TreeSet<>();
         imports.add("org.freedesktop.dbus.Position");
         imports.add("org.freedesktop.dbus.Struct");
-        Map<StructStruct, Type[]> structs = new HashMap<StructStruct, Type[]>(existing);
+        Map<StructStruct, Type[]> structs = new HashMap<>(existing);
         final String[] types = new String[type.length];
         for (int i = 0; i < type.length; i++) {
             types[i] = collapseType(type[i], imports, structs, false, false);
@@ -410,7 +410,7 @@ public class CreateInterface {
         out.println("}");
 
         structs = StructStruct.fillPackages(structs, pack);
-        final Map<StructStruct, Type[]> tocreate = new HashMap<StructStruct, Type[]>(structs);
+        final Map<StructStruct, Type[]> tocreate = new HashMap<>(structs);
         for (final StructStruct ss : existing.keySet()) {
             tocreate.remove(ss);
         }
@@ -456,9 +456,9 @@ public class CreateInterface {
     }
 
     void parseRoot(final Element root) throws DBusException, IOException {
-        Map<StructStruct, Type[]> structs = new HashMap<StructStruct, Type[]>();
-        final Set<String> exceptions = new TreeSet<String>();
-        final Set<String> annotations = new TreeSet<String>();
+        Map<StructStruct, Type[]> structs = new HashMap<>();
+        final Set<String> exceptions = new TreeSet<>();
+        final Set<String> annotations = new TreeSet<>();
 
         for (final Node iface : new IterableNodeList(root.getChildNodes())) {
 
@@ -470,7 +470,7 @@ public class CreateInterface {
 
             if ("interface".equals(iface.getNodeName())) {
 
-                final Map<String, Integer> tuples = new HashMap<String, Integer>();
+                final Map<String, Integer> tuples = new HashMap<>();
                 final String name = ((Element) iface).getAttribute("name");
                 final String file = name.replaceAll("\\.", "/") + ".java";
                 final String path = file.replaceAll("/[^/]*$", "");

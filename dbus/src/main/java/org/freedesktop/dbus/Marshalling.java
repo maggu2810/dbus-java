@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 public class Marshalling {
     private static final Logger LOGGER = LoggerFactory.getLogger(Marshalling.class);
 
-    private static Map<Type, String[]> typeCache = new HashMap<Type, String[]>();
+    private static Map<Type, String[]> typeCache = new HashMap<>();
 
     /**
      * Will return the DBus type corresponding to the given Java type.
@@ -200,7 +200,7 @@ public class Marshalling {
                 out[level].append((char) Message.ArgumentType.OBJECT_PATH);
             } else if (Tuple.class.isAssignableFrom((Class<? extends Object>) p.getRawType())) {
                 final Type[] ts = p.getActualTypeArguments();
-                final Vector<String> vs = new Vector<String>();
+                final Vector<String> vs = new Vector<>();
                 for (final Type t : ts) {
                     for (final String s : recursiveGetDBusType(t, false, level + 1)) {
                         vs.add(s);
@@ -332,19 +332,19 @@ public class Marshalling {
                             }
                         }
 
-                        Vector<Type> contained = new Vector<Type>();
+                        Vector<Type> contained = new Vector<>();
                         int c = getJavaType(dbus.substring(i + 1, j - 1), contained, -1);
                         rv.add(new DBusStructType(contained.toArray(new Type[0])));
                         i = j;
                         break;
                     case Message.ArgumentType.ARRAY:
                         if (Message.ArgumentType.DICT_ENTRY1 == dbus.charAt(i + 1)) {
-                            contained = new Vector<Type>();
+                            contained = new Vector<>();
                             c = getJavaType(dbus.substring(i + 2), contained, 2);
                             rv.add(new DBusMapType(contained.get(0), contained.get(1)));
                             i += c + 2;
                         } else {
-                            contained = new Vector<Type>();
+                            contained = new Vector<>();
                             c = getJavaType(dbus.substring(i + 1), contained, 1);
                             rv.add(new DBusListType(contained.get(0)));
                             i += c;
@@ -394,7 +394,7 @@ public class Marshalling {
                         break;
                     case Message.ArgumentType.DICT_ENTRY1:
                         rv.add(Map.Entry.class);
-                        contained = new Vector<Type>();
+                        contained = new Vector<>();
                         c = getJavaType(dbus.substring(i + 1), contained, 2);
                         i += c + 1;
                         break;
@@ -468,7 +468,7 @@ public class Marshalling {
                 i--;
             } else if (types[i] instanceof TypeVariable && !(parameters[i] instanceof Variant)) {
                 // its an unwrapped variant, wrap it
-                parameters[i] = new Variant<Object>(parameters[i]);
+                parameters[i] = new Variant<>(parameters[i]);
             } else if (parameters[i] instanceof DBusInterface) {
                 parameters[i] = conn.getExportedObject((DBusInterface) parameters[i]);
             }
@@ -492,7 +492,7 @@ public class Marshalling {
         // Turn a signature into a Type[]
         if (type instanceof Class && ((Class) type).isArray() && ((Class) type).getComponentType().equals(Type.class)
                 && parameter instanceof String) {
-            final Vector<Type> rv = new Vector<Type>();
+            final Vector<Type> rv = new Vector<>();
             getJavaType((String) parameter, rv, -1);
             parameter = rv.toArray(new Type[0]);
         }
@@ -704,7 +704,8 @@ public class Marshalling {
                                 LOGGER.error("Exception", AIOOBe);
                             }
                             throw new DBusException(MessageFormat.format(
-                                    localize("Not enough elements to create custom object from serialized data ({0} < {1})."),
+                                    localize(
+                                            "Not enough elements to create custom object from serialized data ({0} < {1})."),
                                     new Object[] { parameters.length - i, newtypes.length }));
                         }
                     }

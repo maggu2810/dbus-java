@@ -34,9 +34,10 @@ public class TestSerializable<A> implements DBusSerializable {
     public void deserialize(final int a, final String b, final List<Integer> c) {
         this.a = a;
         this.b = b;
-        this.c = new Vector<Integer>(c);
+        this.c = new Vector<>(c);
     }
 
+    @Override
     public Object[] serialize() throws DBusException {
         return new Object[] { a, b, c };
     }

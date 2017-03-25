@@ -44,11 +44,13 @@ class DBusMap<K, V> implements Map<K, V> {
             return this.entry == ((Entry) o).entry;
         }
 
+        @Override
         @SuppressWarnings("unchecked")
         public K getKey() {
             return (K) entries[entry][0];
         }
 
+        @Override
         @SuppressWarnings("unchecked")
         public V getValue() {
             return (V) entries[entry][1];
@@ -59,19 +61,23 @@ class DBusMap<K, V> implements Map<K, V> {
             return entries[entry][0].hashCode();
         }
 
+        @Override
         public V setValue(final V value) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public int compareTo(final Entry e) {
             return entry - e.entry;
         }
     }
 
+    @Override
     public void clear() {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public boolean containsKey(final Object key) {
         for (int i = 0; i < entries.length; i++) {
             if (key == entries[i][0] || key != null && key.equals(entries[i][0])) {
@@ -81,6 +87,7 @@ class DBusMap<K, V> implements Map<K, V> {
         return false;
     }
 
+    @Override
     public boolean containsValue(final Object value) {
         for (int i = 0; i < entries.length; i++) {
             if (value == entries[i][1] || value != null && value.equals(entries[i][1])) {
@@ -90,14 +97,16 @@ class DBusMap<K, V> implements Map<K, V> {
         return false;
     }
 
+    @Override
     public Set<Map.Entry<K, V>> entrySet() {
-        final Set<Map.Entry<K, V>> s = new TreeSet<Map.Entry<K, V>>();
+        final Set<Map.Entry<K, V>> s = new TreeSet<>();
         for (int i = 0; i < entries.length; i++) {
             s.add(new Entry(i));
         }
         return s;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public V get(final Object key) {
         for (int i = 0; i < entries.length; i++) {
@@ -108,38 +117,45 @@ class DBusMap<K, V> implements Map<K, V> {
         return null;
     }
 
+    @Override
     public boolean isEmpty() {
         return entries.length == 0;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public Set<K> keySet() {
-        final Set<K> s = new TreeSet<K>();
+        final Set<K> s = new TreeSet<>();
         for (final Object[] entry : entries) {
             s.add((K) entry[0]);
         }
         return s;
     }
 
+    @Override
     public V put(final K key, final V value) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void putAll(final Map<? extends K, ? extends V> t) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public V remove(final Object key) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public int size() {
         return entries.length;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public Collection<V> values() {
-        final List<V> l = new Vector<V>();
+        final List<V> l = new Vector<>();
         for (final Object[] entry : entries) {
             l.add((V) entry[1]);
         }

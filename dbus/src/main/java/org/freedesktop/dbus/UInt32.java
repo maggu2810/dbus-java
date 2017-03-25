@@ -102,6 +102,7 @@ public class UInt32 extends Number implements Comparable<UInt32> {
      *
      * @return 0 if equal, -ve or +ve if they are different.
      */
+    @Override
     public int compareTo(final UInt32 other) {
         return (int) (this.value - other.value);
     }

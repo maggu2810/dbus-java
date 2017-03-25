@@ -53,9 +53,9 @@ class ExportedObject {
     @SuppressWarnings("unchecked")
     private Map<MethodTuple, Method> getExportedMethods(final Class c) throws DBusException {
         if (DBusInterface.class.equals(c)) {
-            return new HashMap<MethodTuple, Method>();
+            return new HashMap<>();
         }
-        final Map<MethodTuple, Method> m = new HashMap<MethodTuple, Method>();
+        final Map<MethodTuple, Method> m = new HashMap<>();
         for (final Class i : c.getInterfaces()) {
             if (DBusInterface.class.equals(i)) {
                 // add this class's public methods
@@ -70,9 +70,9 @@ class ExportedObject {
                         throw new DBusException(localize("DBusInterfaces cannot be declared outside a package"));
                     }
                     if (c.getName().length() > DBusConnection.MAX_NAME_LENGTH) {
-                        throw new DBusException(
-                                localize("Introspected interface name exceeds 255 characters. Cannot export objects of type ")
-                                        + c.getName());
+                        throw new DBusException(localize(
+                                "Introspected interface name exceeds 255 characters. Cannot export objects of type ")
+                                + c.getName());
                     } else {
                         introspectiondata += " <interface name=\""
                                 + AbstractConnection.dollar_pattern.matcher(c.getName()).replaceAll(".") + "\">\n";
@@ -89,9 +89,9 @@ class ExportedObject {
                             name = meth.getName();
                         }
                         if (name.length() > DBusConnection.MAX_NAME_LENGTH) {
-                            throw new DBusException(
-                                    localize("Introspected method name exceeds 255 characters. Cannot export objects with method ")
-                                            + name);
+                            throw new DBusException(localize(
+                                    "Introspected method name exceeds 255 characters. Cannot export objects with method ")
+                                    + name);
                         }
                         introspectiondata += "  <method name=\"" + name + "\" >\n";
                         introspectiondata += getAnnotations(meth);
@@ -121,7 +121,8 @@ class ExportedObject {
                                     }
                                 }
                             } else if (Object[].class.equals(meth.getGenericReturnType())) {
-                                throw new DBusException(localize("Return type of Object[] cannot be introspected properly"));
+                                throw new DBusException(
+                                        localize("Return type of Object[] cannot be introspected properly"));
                             } else {
                                 for (final String s : Marshalling.getDBusType(meth.getGenericReturnType())) {
                                     introspectiondata += "   <arg type=\"" + s + "\" direction=\"out\"/>\n";
@@ -142,9 +143,9 @@ class ExportedObject {
                             name = sig.getSimpleName();
                         }
                         if (name.length() > DBusConnection.MAX_NAME_LENGTH) {
-                            throw new DBusException(
-                                    localize("Introspected signal name exceeds 255 characters. Cannot export objects with signals of type ")
-                                            + name);
+                            throw new DBusException(localize(
+                                    "Introspected signal name exceeds 255 characters. Cannot export objects with signals of type ")
+                                    + name);
                         }
                         introspectiondata += "  <signal name=\"" + name + "\">\n";
                         final Constructor con = sig.getConstructors()[0];
@@ -174,9 +175,9 @@ class ExportedObject {
 
     public ExportedObject(final DBusInterface object, final boolean weakreferences) throws DBusException {
         if (weakreferences) {
-            this.object = new WeakReference<DBusInterface>(object);
+            this.object = new WeakReference<>(object);
         } else {
-            this.object = new StrongReference<DBusInterface>(object);
+            this.object = new StrongReference<>(object);
         }
         introspectiondata = "";
         methods = getExportedMethods(object.getClass());

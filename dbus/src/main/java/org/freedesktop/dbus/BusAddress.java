@@ -38,7 +38,7 @@ public class BusAddress {
         type = ss[0];
         logger.trace("Transport type: {}", type);
         final String[] ps = ss[1].split(",");
-        parameters = new HashMap<String, String>();
+        parameters = new HashMap<>();
         for (final String p : ps) {
             final String[] kv = p.split("=", 2);
             parameters.put(kv[0], kv[1]);

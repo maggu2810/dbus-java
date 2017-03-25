@@ -186,7 +186,7 @@ public class Message {
      */
     protected Message(final byte endian, final byte type, final byte flags) throws DBusException {
         wiredata = new byte[BUFFERINCREMENT][];
-        headers = new HashMap<Byte, Object>();
+        headers = new HashMap<>();
         big = Endian.BIG == endian;
         bytecounter = 0;
         synchronized (Message.class) {
@@ -204,7 +204,7 @@ public class Message {
      */
     protected Message() {
         wiredata = new byte[BUFFERINCREMENT][];
-        headers = new HashMap<Byte, Object>();
+        headers = new HashMap<>();
         bytecounter = 0;
     }
 
@@ -667,7 +667,8 @@ public class Message {
                                 }
                                 break;
                             default:
-                                throw new MarshallingException(localize("Primative array being sent as non-primative array."));
+                                throw new MarshallingException(
+                                        localize("Primative array being sent as non-primative array."));
                         }
                         appendBytes(primbuf);
                     } else if (data instanceof List) {
@@ -686,7 +687,7 @@ public class Message {
                         }
                         if (i == diff) {
                             // advance the type parser even on 0-size arrays.
-                            final Vector<Type> temp = new Vector<Type>();
+                            final Vector<Type> temp = new Vector<>();
                             final byte[] temp2 = new byte[sigb.length - diff];
                             System.arraycopy(sigb, diff, temp2, 0, temp2.length);
                             final String temp3 = new String(temp2);
@@ -935,7 +936,8 @@ public class Message {
                 ofs[1] = align(ofs[1], sigb[ofs[0]]);
                 int length = (int) (size / algn);
                 if (length > DBusConnection.MAX_ARRAY_LENGTH) {
-                    throw new MarshallingException(localize("Arrays must not exceed ") + DBusConnection.MAX_ARRAY_LENGTH);
+                    throw new MarshallingException(
+                            localize("Arrays must not exceed ") + DBusConnection.MAX_ARRAY_LENGTH);
                 }
                 // optimise primatives
                 switch (sigb[ofs[0]]) {
@@ -983,7 +985,7 @@ public class Message {
                     case ArgumentType.DICT_ENTRY1:
                         if (0 == size) {
                             // advance the type parser even on 0-size arrays.
-                            final Vector<Type> temp = new Vector<Type>();
+                            final Vector<Type> temp = new Vector<>();
                             final byte[] temp2 = new byte[sigb.length - ofs[0]];
                             System.arraycopy(sigb, ofs[0], temp2, 0, temp2.length);
                             final String temp3 = new String(temp2);
@@ -994,17 +996,17 @@ public class Message {
                         }
                         int ofssave = ofs[0];
                         long end = ofs[1] + size;
-                        final Vector<Object[]> entries = new Vector<Object[]>();
+                        final Vector<Object[]> entries = new Vector<>();
                         while (ofs[1] < end) {
                             ofs[0] = ofssave;
                             entries.add((Object[]) extractone(sigb, buf, ofs, true));
                         }
-                        rv = new DBusMap<Object, Object>(entries.toArray(new Object[0][]));
+                        rv = new DBusMap<>(entries.toArray(new Object[0][]));
                         break;
                     default:
                         if (0 == size) {
                             // advance the type parser even on 0-size arrays.
-                            final Vector<Type> temp = new Vector<Type>();
+                            final Vector<Type> temp = new Vector<>();
                             final byte[] temp2 = new byte[sigb.length - ofs[0]];
                             System.arraycopy(sigb, ofs[0], temp2, 0, temp2.length);
                             final String temp3 = new String(temp2);
@@ -1015,7 +1017,7 @@ public class Message {
                         }
                         ofssave = ofs[0];
                         end = ofs[1] + size;
-                        final Vector<Object> contents = new Vector<Object>();
+                        final Vector<Object> contents = new Vector<>();
                         while (ofs[1] < end) {
                             ofs[0] = ofssave;
                             contents.add(extractone(sigb, buf, ofs, true));
@@ -1027,7 +1029,7 @@ public class Message {
                 }
                 break;
             case ArgumentType.STRUCT1:
-                final Vector<Object> contents = new Vector<Object>();
+                final Vector<Object> contents = new Vector<>();
                 while (sigb[++ofs[0]] != ArgumentType.STRUCT2) {
                     contents.add(extractone(sigb, buf, ofs, true));
                 }
@@ -1048,7 +1050,7 @@ public class Message {
                 final int[] newofs = new int[] { 0, ofs[1] };
                 final String sig = (String) extract(ArgumentType.SIGNATURE_STRING, buf, newofs)[0];
                 newofs[0] = 0;
-                rv = new Variant<Object>(extract(sig, buf, newofs)[0], sig);
+                rv = new Variant<>(extract(sig, buf, newofs)[0], sig);
                 ofs[1] = newofs[1];
                 break;
             case ArgumentType.STRING:
@@ -1106,7 +1108,7 @@ public class Message {
      */
     public Object[] extract(final String sig, final byte[] buf, final int[] ofs) throws DBusException {
         logger.trace("extract({},#{}, \\{{},{}}", sig, buf.length, ofs[0], ofs[1]);
-        final Vector<Object> rv = new Vector<Object>();
+        final Vector<Object> rv = new Vector<>();
         final byte[] sigb = sig.getBytes();
         for (final int[] i = ofs; i[0] < sigb.length; i[0]++) {
             rv.add(extractone(sigb, buf, i, false));

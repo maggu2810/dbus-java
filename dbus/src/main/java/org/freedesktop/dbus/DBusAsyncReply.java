@@ -38,7 +38,7 @@ public class DBusAsyncReply<ReturnType> {
      */
     public static Collection<DBusAsyncReply<? extends Object>> hasReply(
             final Collection<DBusAsyncReply<? extends Object>> replies) {
-        final Collection<DBusAsyncReply<? extends Object>> c = new ArrayList<DBusAsyncReply<? extends Object>>(replies);
+        final Collection<DBusAsyncReply<? extends Object>> c = new ArrayList<>(replies);
         final Iterator<DBusAsyncReply<? extends Object>> i = c.iterator();
         while (i.hasNext()) {
             if (!i.next().hasReply()) {

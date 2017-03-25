@@ -32,14 +32,17 @@ public class DBusStructType implements ParameterizedType {
         this.contents = contents;
     }
 
+    @Override
     public Type[] getActualTypeArguments() {
         return contents;
     }
 
+    @Override
     public Type getRawType() {
         return Struct.class;
     }
 
+    @Override
     public Type getOwnerType() {
         return null;
     }

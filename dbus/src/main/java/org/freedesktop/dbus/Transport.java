@@ -183,7 +183,7 @@ public class Transport {
             }
 
             // read old file
-            final Vector<String> lines = new Vector<String>();
+            final Vector<String> lines = new Vector<>();
             if (cookiefile.exists()) {
                 final BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(cookiefile)));
                 String s = null;

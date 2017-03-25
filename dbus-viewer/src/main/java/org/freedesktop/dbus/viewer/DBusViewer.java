@@ -58,7 +58,7 @@ import org.xml.sax.SAXException;
  * @since 29/01/2006
  */
 public class DBusViewer {
-    private static final Map<String, Integer> CONNECTION_TYPES = new HashMap<String, Integer>();
+    private static final Map<String, Integer> CONNECTION_TYPES = new HashMap<>();
 
     static {
         CONNECTION_TYPES.put("System", DBusConnection.SYSTEM);
@@ -71,9 +71,10 @@ public class DBusViewer {
      * @param connectionTypes The map of connection types
      */
     public DBusViewer(final Map<String, Integer> connectionTypes) {
-        connections = new ArrayList<DBusConnection>(connectionTypes.size());
+        connections = new ArrayList<>(connectionTypes.size());
 
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             @SuppressWarnings("synthetic-access")
             public void run() {
 
@@ -118,6 +119,7 @@ public class DBusViewer {
             tabbedPane.addTab(key, label);
         }
         final Runnable loader = new Runnable() {
+            @Override
             @SuppressWarnings("synthetic-access")
             public void run() {
                 final boolean users = true, owners = true;
@@ -128,43 +130,39 @@ public class DBusViewer {
 
                         final TableModel tableModel = listDBusConnection(users, owners, conn);
 
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                final int index = tabbedPane.indexOfTab(key);
-                                final JTable table = new JTable(tableModel);
+                        SwingUtilities.invokeLater(() -> {
+                            final int index = tabbedPane.indexOfTab(key);
+                            final JTable table = new JTable(tableModel);
 
-                                final JScrollPane scrollPane = new JScrollPane(table);
+                            final JScrollPane scrollPane = new JScrollPane(table);
 
-                                final JPanel tab = new JPanel(new BorderLayout());
-                                tab.add(scrollPane, BorderLayout.CENTER);
+                            final JPanel tab = new JPanel(new BorderLayout());
+                            tab.add(scrollPane, BorderLayout.CENTER);
 
-                                final JPanel southPanel = new JPanel();
-                                final JButton button = new JButton(new IntrospectAction(table));
-                                southPanel.add(button);
+                            final JPanel southPanel = new JPanel();
+                            final JButton button = new JButton(new IntrospectAction(table));
+                            southPanel.add(button);
 
-                                tab.add(southPanel, BorderLayout.SOUTH);
+                            tab.add(southPanel, BorderLayout.SOUTH);
 
-                                tabbedPane.setComponentAt(index, tab);
+                            tabbedPane.setComponentAt(index, tab);
 
-                            }
                         });
                     } catch (final DBusException e) {
                         e.printStackTrace();
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                final int index = tabbedPane.indexOfTab(key);
-                                final JLabel label = (JLabel) tabbedPane.getComponentAt(index);
-                                label.setText(localize("Could not load Dbus information for ") + key + ":" + e.getMessage());
-                            }
+                        SwingUtilities.invokeLater(() -> {
+                            final int index = tabbedPane.indexOfTab(key);
+                            final JLabel label = (JLabel) tabbedPane.getComponentAt(index);
+                            label.setText(
+                                    localize("Could not load Dbus information for ") + key + ":" + e.getMessage());
                         });
                     } catch (final DBusExecutionException e) {
                         e.printStackTrace();
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                final int index = tabbedPane.indexOfTab(key);
-                                final JLabel label = (JLabel) tabbedPane.getComponentAt(index);
-                                label.setText(localize("Could not load Dbus information for ") + key + ":" + e.getMessage());
-                            }
+                        SwingUtilities.invokeLater(() -> {
+                            final int index = tabbedPane.indexOfTab(key);
+                            final JLabel label = (JLabel) tabbedPane.getComponentAt(index);
+                            label.setText(
+                                    localize("Could not load Dbus information for ") + key + ":" + e.getMessage());
                         });
                     }
                 }
@@ -186,7 +184,7 @@ public class DBusViewer {
         final ParsingContext p = new ParsingContext(conn);
 
         for (final String name : names) {
-            List<DBusEntry> results = new ArrayList<DBusEntry>();
+            List<DBusEntry> results = new ArrayList<>();
             try {
                 // String objectpath = '/' + name.replace('.', '/');
 
@@ -307,7 +305,7 @@ public class DBusViewer {
         }
 
         void reset() {
-            result = new ArrayList<DBusEntry>();
+            result = new ArrayList<>();
         }
 
     }

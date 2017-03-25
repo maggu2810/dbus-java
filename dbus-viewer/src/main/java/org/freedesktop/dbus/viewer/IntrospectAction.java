@@ -48,6 +48,7 @@ final class IntrospectAction extends AbstractAction implements ListSelectionList
     }
 
     /** {@inheritDoc} */
+    @Override
     public void valueChanged(final ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {
             final DBusTableModel model = (DBusTableModel) table.getModel();
@@ -61,6 +62,7 @@ final class IntrospectAction extends AbstractAction implements ListSelectionList
     }
 
     /** {@inheritDoc} */
+    @Override
     public void actionPerformed(final ActionEvent e) {
 
         final int row = table.getSelectedRow();
@@ -70,6 +72,7 @@ final class IntrospectAction extends AbstractAction implements ListSelectionList
             final String xmlFile = entry.getName() + ".xml";
             final Introspectable introspectable = entry.getIntrospectable();
             new Thread(new Runnable() {
+                @Override
                 public void run() {
 
                     final StringStreamFactory factory = new StringStreamFactory();
@@ -100,6 +103,7 @@ final class IntrospectAction extends AbstractAction implements ListSelectionList
                         introspectionPanel.add(southPanel, BorderLayout.SOUTH);
 
                         SwingUtilities.invokeLater(new Runnable() {
+                            @Override
                             @SuppressWarnings("synthetic-access")
                             public void run() {
                                 JOptionPane.showMessageDialog(table, introspectionPanel, "Introspection",
@@ -110,6 +114,7 @@ final class IntrospectAction extends AbstractAction implements ListSelectionList
                     } catch (final Exception e) {
                         e.printStackTrace();
                         SwingUtilities.invokeLater(new Runnable() {
+                            @Override
                             @SuppressWarnings("synthetic-access")
                             public void run() {
                                 JOptionPane.showMessageDialog(table, e.getMessage(), "Introspection Failed",

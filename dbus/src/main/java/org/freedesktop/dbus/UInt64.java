@@ -180,6 +180,7 @@ public class UInt64 extends Number implements Comparable<UInt64> {
      *
      * @return 0 if equal, -ve or +ve if they are different.
      */
+    @Override
     public int compareTo(final UInt64 other) {
         return this.value.compareTo(other.value);
     }

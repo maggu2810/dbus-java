@@ -46,7 +46,7 @@ public class Caller {
             if (args.length == 4) {
                 m = new MethodCall(args[0], args[1], args[2], args[3], (byte) 0, null);
             } else {
-                final Vector<Type> lts = new Vector<Type>();
+                final Vector<Type> lts = new Vector<>();
                 Marshalling.getJavaType(args[4], lts, -1);
                 final Type[] ts = lts.toArray(new Type[0]);
                 final Object[] os = new Object[args.length - 5];

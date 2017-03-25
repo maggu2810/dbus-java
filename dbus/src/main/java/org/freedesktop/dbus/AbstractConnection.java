@@ -41,7 +41,7 @@ public abstract class AbstractConnection {
     private final Logger logger = LoggerFactory.getLogger(AbstractConnection.class);
 
     protected class FallbackContainer {
-        private final Map<String[], ExportedObject> fallbacks = new HashMap<String[], ExportedObject>();
+        private final Map<String[], ExportedObject> fallbacks = new HashMap<>();
 
         public synchronized void add(final String path, final ExportedObject eo) {
             logger.debug("Adding fallback on {} of {}", path, eo);
@@ -141,14 +141,17 @@ public abstract class AbstractConnection {
             this.objectpath = objectpath;
         }
 
+        @Override
         public boolean isRemote() {
             return false;
         }
 
+        @Override
         public void Ping() {
             return;
         }
 
+        @Override
         public String Introspect() {
             String intro = objectTree.Introspect(objectpath);
             if (null == intro) {
@@ -276,7 +279,7 @@ public abstract class AbstractConnection {
     protected boolean _run;
     EfficientQueue outgoing;
     LinkedList<Error> pendingErrors;
-    private static final Map<Thread, DBusCallInfo> infomap = new HashMap<Thread, DBusCallInfo>();
+    private static final Map<Thread, DBusCallInfo> infomap = new HashMap<>();
     protected _thread thread;
     protected _sender sender;
     protected Transport transport;
@@ -295,20 +298,20 @@ public abstract class AbstractConnection {
     }
 
     protected AbstractConnection(final String address) throws DBusException {
-        exportedObjects = new HashMap<String, ExportedObject>();
-        importedObjects = new HashMap<DBusInterface, RemoteObject>();
+        exportedObjects = new HashMap<>();
+        importedObjects = new HashMap<>();
         _globalhandlerreference = new _globalhandler();
         synchronized (exportedObjects) {
             exportedObjects.put(null, new ExportedObject(_globalhandlerreference, weakreferences));
         }
-        handledSignals = new HashMap<SignalTuple, Vector<DBusSigHandler<? extends DBusSignal>>>();
+        handledSignals = new HashMap<>();
         pendingCalls = new EfficientMap(PENDING_MAP_INITIAL_SIZE);
         outgoing = new EfficientQueue(PENDING_MAP_INITIAL_SIZE);
-        pendingCallbacks = new HashMap<MethodCall, CallbackHandler<? extends Object>>();
-        pendingCallbackReplys = new HashMap<MethodCall, DBusAsyncReply<? extends Object>>();
-        pendingErrors = new LinkedList<Error>();
-        runnables = new LinkedList<Runnable>();
-        workers = new LinkedList<_workerthread>();
+        pendingCallbacks = new HashMap<>();
+        pendingCallbackReplys = new HashMap<>();
+        pendingErrors = new LinkedList<>();
+        runnables = new LinkedList<>();
+        workers = new LinkedList<>();
         objectTree = new ObjectTree();
         fallbackcontainer = new FallbackContainer();
         synchronized (workers) {
@@ -604,7 +607,7 @@ public abstract class AbstractConnection {
         synchronized (handledSignals) {
             Vector<DBusSigHandler<? extends DBusSignal>> v = handledSignals.get(key);
             if (null == v) {
-                v = new Vector<DBusSigHandler<? extends DBusSignal>>();
+                v = new Vector<>();
                 v.add(handler);
                 handledSignals.put(key, v);
             } else {
@@ -822,9 +825,9 @@ public abstract class AbstractConnection {
             if (null == meth) {
                 try {
                     queueOutgoing(new Error(m,
-                            new DBus.Error.UnknownMethod(
-                                    MessageFormat.format(localize("The method `{0}.{1}' does not exist on this object."),
-                                            new Object[] { m.getInterface(), m.getName() }))));
+                            new DBus.Error.UnknownMethod(MessageFormat.format(
+                                    localize("The method `{0}.{1}' does not exist on this object."),
+                                    new Object[] { m.getInterface(), m.getName() }))));
                 } catch (final DBusException DBe) {
                 }
                 return;
@@ -842,6 +845,7 @@ public abstract class AbstractConnection {
         addRunnable(new Runnable() {
             private boolean run = false;
 
+            @Override
             public synchronized void run() {
                 if (run) {
                     return;
@@ -925,7 +929,7 @@ public abstract class AbstractConnection {
     @SuppressWarnings({ "unchecked", "deprecation" })
     private void handleMessage(final DBusSignal s) {
         logger.debug("Handling incoming signal: {}", s);
-        final Vector<DBusSigHandler<? extends DBusSignal>> v = new Vector<DBusSigHandler<? extends DBusSignal>>();
+        final Vector<DBusSigHandler<? extends DBusSignal>> v = new Vector<>();
         synchronized (handledSignals) {
             Vector<DBusSigHandler<? extends DBusSignal>> t;
             t = handledSignals.get(new SignalTuple(s.getInterface(), s.getName(), null, null));
@@ -954,6 +958,7 @@ public abstract class AbstractConnection {
             addRunnable(new Runnable() {
                 private boolean run = false;
 
+                @Override
                 public synchronized void run() {
                     if (run) {
                         return;
@@ -1009,6 +1014,7 @@ public abstract class AbstractConnection {
                 addRunnable(new Runnable() {
                     private boolean run = false;
 
+                    @Override
                     public synchronized void run() {
                         if (run) {
                             return;
@@ -1072,6 +1078,7 @@ public abstract class AbstractConnection {
                 addRunnable(new Runnable() {
                     private boolean run = false;
 
+                    @Override
                     public synchronized void run() {
                         if (run) {
                             return;
@@ -1120,8 +1127,9 @@ public abstract class AbstractConnection {
             if (m instanceof MethodCall) {
                 if (0 == (m.getFlags() & Message.Flags.NO_REPLY_EXPECTED)) {
                     if (null == pendingCalls) {
-                        ((MethodCall) m).setReply(new Error("org.freedesktop.DBus.Local",
-                                "org.freedesktop.DBus.Local.Disconnected", 0, "s", new Object[] { localize("Disconnected") }));
+                        ((MethodCall) m).setReply(
+                                new Error("org.freedesktop.DBus.Local", "org.freedesktop.DBus.Local.Disconnected", 0,
+                                        "s", new Object[] { localize("Disconnected") }));
                     } else {
                         synchronized (pendingCalls) {
                             pendingCalls.put(m.getSerial(), (MethodCall) m);
@@ -1138,8 +1146,9 @@ public abstract class AbstractConnection {
             }
             if (m instanceof MethodCall && e instanceof NotConnected) {
                 try {
-                    ((MethodCall) m).setReply(new Error("org.freedesktop.DBus.Local",
-                            "org.freedesktop.DBus.Local.Disconnected", 0, "s", new Object[] { localize("Disconnected") }));
+                    ((MethodCall) m)
+                            .setReply(new Error("org.freedesktop.DBus.Local", "org.freedesktop.DBus.Local.Disconnected",
+                                    0, "s", new Object[] { localize("Disconnected") }));
                 } catch (final DBusException DBe) {
                 }
             }
@@ -1151,8 +1160,8 @@ public abstract class AbstractConnection {
             } else if (m instanceof MethodCall) {
                 try {
                     logger.info("Setting reply to {} as an error", m);
-                    ((MethodCall) m).setReply(
-                            new Error(m, new DBusExecutionException(localize("Message Failed to Send: ") + e.getMessage())));
+                    ((MethodCall) m).setReply(new Error(m,
+                            new DBusExecutionException(localize("Message Failed to Send: ") + e.getMessage())));
                 } catch (final DBusException DBe) {
                 }
             } else if (m instanceof MethodReturn) {

@@ -102,6 +102,7 @@ public class UInt16 extends Number implements Comparable<UInt16> {
      *
      * @return 0 if equal, -ve or +ve if they are different.
      */
+    @Override
     public int compareTo(final UInt16 other) {
         return /* (int) */ this.value - other.value;
     }

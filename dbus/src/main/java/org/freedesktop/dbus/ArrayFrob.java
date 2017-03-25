@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 class ArrayFrob {
     private static final Logger LOGGER = LoggerFactory.getLogger(ArrayFrob.class);
 
-    static Hashtable<Class<? extends Object>, Class<? extends Object>> primitiveToWrapper = new Hashtable<Class<? extends Object>, Class<? extends Object>>();
-    static Hashtable<Class<? extends Object>, Class<? extends Object>> wrapperToPrimitive = new Hashtable<Class<? extends Object>, Class<? extends Object>>();
+    static Hashtable<Class<? extends Object>, Class<? extends Object>> primitiveToWrapper = new Hashtable<>();
+    static Hashtable<Class<? extends Object>, Class<? extends Object>> wrapperToPrimitive = new Hashtable<>();
     static {
         primitiveToWrapper.put(Boolean.TYPE, Boolean.class);
         primitiveToWrapper.put(Byte.TYPE, Byte.class);
@@ -93,7 +93,7 @@ class ArrayFrob {
         if (!o.getClass().isArray()) {
             throw new IllegalArgumentException(localize("Not an array"));
         }
-        final List<T> l = new ArrayList<T>(Array.getLength(o));
+        final List<T> l = new ArrayList<>(Array.getLength(o));
         for (int i = 0; i < Array.getLength(o); i++) {
             l.add((T) Array.get(o, i));
         }
@@ -177,8 +177,8 @@ class ArrayFrob {
             throw new IllegalArgumentException(e);
         }
 
-        throw new IllegalArgumentException(MessageFormat.format(localize("Not An Expected Convertion type from {0} to {1}"),
-                new Object[] { o.getClass(), c }));
+        throw new IllegalArgumentException(MessageFormat
+                .format(localize("Not An Expected Convertion type from {0} to {1}"), new Object[] { o.getClass(), c }));
     }
 
     public static Object[] type(final Object[] old, final Class<Object> c) {
