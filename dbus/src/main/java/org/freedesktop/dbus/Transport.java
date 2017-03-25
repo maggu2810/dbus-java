@@ -60,7 +60,7 @@ public class Transport {
 
             public Command(final String s) throws IOException {
                 final String[] ss = s.split(" ");
-                logger.trace("Creating command from: {}", ss);
+                logger.trace("Creating command from: {}", (Object[]) ss);
                 if (0 == col.compare(ss[0], "OK")) {
                     command = COMMAND_OK;
                     data = ss[1];
