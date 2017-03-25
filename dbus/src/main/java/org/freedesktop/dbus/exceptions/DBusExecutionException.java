@@ -8,33 +8,36 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus.exceptions;
 
 /**
  * An exception while running a remote method within DBus.
  */
 @SuppressWarnings("serial")
-public class DBusExecutionException extends RuntimeException
-{
-   private String type;
-   /**
-    * Create an exception with the specified message
-    */
-   public DBusExecutionException(String message)
-   {
-      super(message);
-   }
-   public void setType(String type)
-   {
-      this.type = type;
-   }
-   /**
-    * Get the DBus type of this exception. Use if this
-    * was an exception we don't have a class file for.
-    */
-   public String getType()
-   {
-      if (null == type) return getClass().getName();
-      else return type;
-   }
+public class DBusExecutionException extends RuntimeException {
+    private String type;
+
+    /**
+     * Create an exception with the specified message
+     */
+    public DBusExecutionException(final String message) {
+        super(message);
+    }
+
+    public void setType(final String type) {
+        this.type = type;
+    }
+
+    /**
+     * Get the DBus type of this exception. Use if this
+     * was an exception we don't have a class file for.
+     */
+    public String getType() {
+        if (null == type) {
+            return getClass().getName();
+        } else {
+            return type;
+        }
+    }
 }

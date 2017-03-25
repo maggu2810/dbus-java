@@ -8,6 +8,7 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus.viewer;
 
 import static org.freedesktop.dbus.Gettext._;
@@ -21,65 +22,56 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 @SuppressWarnings("serial")
-class SaveFileAction extends TabbedSaveAction implements ChangeListener
-{
-	private class SelectedTabIterator implements Iterator<TextFile>
-	{
-		boolean iterated = false;
-		/** {@inheritDoc} */
-		public boolean hasNext()
-		{
-			return !iterated;
-		}
+class SaveFileAction extends TabbedSaveAction implements ChangeListener {
+    private class SelectedTabIterator implements Iterator<TextFile> {
+        boolean iterated = false;
 
-		/** {@inheritDoc} */
-		public TextFile next()
-		{
-			if (iterated)
-			{
-				throw new NoSuchElementException(_("Already iterated"));
-			}
-			iterated = true;
-			return getTextFile(tabbedPane.getSelectedIndex());
-		}
+        /** {@inheritDoc} */
+        public boolean hasNext() {
+            return !iterated;
+        }
 
-		/** {@inheritDoc} */
-		public void remove()
-		{
-			throw new UnsupportedOperationException();
-		}
+        /** {@inheritDoc} */
+        public TextFile next() {
+            if (iterated) {
+                throw new NoSuchElementException(_("Already iterated"));
+            }
+            iterated = true;
+            return getTextFile(tabbedPane.getSelectedIndex());
+        }
 
-	}
+        /** {@inheritDoc} */
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
 
-	SaveFileAction(JTabbedPane tabbedPane)
-	{
-		super(tabbedPane);
-		
-		enableAndSetName();
-		
-		tabbedPane.addChangeListener(this);
-	}
+    }
 
-	/** {@inheritDoc} */
-	public void stateChanged(ChangeEvent e)
-	{
-		enableAndSetName();
-	}
+    SaveFileAction(final JTabbedPane tabbedPane) {
+        super(tabbedPane);
 
-	/**
-	 * Enable and set the name of the action based on the shown tab
-	 */
-	void enableAndSetName()
-	{
-		int selectedIndex = tabbedPane.getSelectedIndex();
-		boolean enabled = selectedIndex > -1;
-		putValue(Action.NAME, _("Save ") + getFileName(selectedIndex) + "...");
-		setEnabled(enabled);
-	}
+        enableAndSetName();
 
-	/** {@inheritDoc} */
-	public Iterator<TextFile> iterator()
-	{
-		return new SelectedTabIterator();
-	}
+        tabbedPane.addChangeListener(this);
+    }
+
+    /** {@inheritDoc} */
+    public void stateChanged(final ChangeEvent e) {
+        enableAndSetName();
+    }
+
+    /**
+     * Enable and set the name of the action based on the shown tab
+     */
+    void enableAndSetName() {
+        final int selectedIndex = tabbedPane.getSelectedIndex();
+        final boolean enabled = selectedIndex > -1;
+        putValue(Action.NAME, _("Save ") + getFileName(selectedIndex) + "...");
+        setEnabled(enabled);
+    }
+
+    /** {@inheritDoc} */
+    public Iterator<TextFile> iterator() {
+        return new SelectedTabIterator();
+    }
 }

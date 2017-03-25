@@ -8,62 +8,79 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus;
 
 import java.util.Vector;
+
 import org.freedesktop.dbus.exceptions.DBusException;
 
-public class MethodReturn extends Message
-{
-   MethodReturn() { }
-   public MethodReturn(String dest, long replyserial, String sig, Object... args) throws DBusException
-   {
-      this(null, dest, replyserial, sig, args);
-   }
-   public MethodReturn(String source, String dest, long replyserial, String sig, Object... args) throws DBusException
-   {
-      super(Message.Endian.BIG, Message.MessageType.METHOD_RETURN, (byte) 0);
+public class MethodReturn extends Message {
+    MethodReturn() {
+    }
 
-      headers.put(Message.HeaderField.REPLY_SERIAL,replyserial);
+    public MethodReturn(final String dest, final long replyserial, final String sig, final Object... args)
+            throws DBusException {
+        this(null, dest, replyserial, sig, args);
+    }
 
-      Vector<Object> hargs = new Vector<Object>();
-      hargs.add(new Object[] { Message.HeaderField.REPLY_SERIAL, new Object[] { ArgumentType.UINT32_STRING, replyserial } });
-      
-      if (null != source) {
-         headers.put(Message.HeaderField.SENDER,source);
-         hargs.add(new Object[] { Message.HeaderField.SENDER, new Object[] { ArgumentType.STRING_STRING, source } });
-      }
- 
-      if (null != dest) {
-         headers.put(Message.HeaderField.DESTINATION,dest);
-         hargs.add(new Object[] { Message.HeaderField.DESTINATION, new Object[] { ArgumentType.STRING_STRING, dest } });
-      }
+    public MethodReturn(final String source, final String dest, final long replyserial, final String sig,
+            final Object... args) throws DBusException {
+        super(Message.Endian.BIG, Message.MessageType.METHOD_RETURN, (byte) 0);
 
-      if (null != sig) {
-         hargs.add(new Object[] { Message.HeaderField.SIGNATURE, new Object[] { ArgumentType.SIGNATURE_STRING, sig } });
-         headers.put(Message.HeaderField.SIGNATURE,sig);
-         setArgs(args);
-      }
+        headers.put(Message.HeaderField.REPLY_SERIAL, replyserial);
 
-      byte[] blen = new byte[4];
-      appendBytes(blen);
-      append("ua(yv)", serial, hargs.toArray());
-      pad((byte)8);
+        final Vector<Object> hargs = new Vector<Object>();
+        hargs.add(new Object[] { Message.HeaderField.REPLY_SERIAL,
+                new Object[] { ArgumentType.UINT32_STRING, replyserial } });
 
-      long c = bytecounter;
-      if (null != sig) append(sig, args);
-      marshallint(bytecounter-c, blen, 0, 4);
-   }
-   public MethodReturn(MethodCall mc, String sig, Object... args) throws DBusException
-   {
-      this(null, mc, sig, args);
-   }
-   public MethodReturn(String source, MethodCall mc, String sig, Object... args) throws DBusException
-   {
-      this(source, mc.getSource(), mc.getSerial(), sig, args);
-      this.call = mc;
-   }
-   MethodCall call;
-   public MethodCall getCall() { return call; }
-   protected void setCall(MethodCall call) { this.call = call; }
+        if (null != source) {
+            headers.put(Message.HeaderField.SENDER, source);
+            hargs.add(new Object[] { Message.HeaderField.SENDER, new Object[] { ArgumentType.STRING_STRING, source } });
+        }
+
+        if (null != dest) {
+            headers.put(Message.HeaderField.DESTINATION, dest);
+            hargs.add(new Object[] { Message.HeaderField.DESTINATION,
+                    new Object[] { ArgumentType.STRING_STRING, dest } });
+        }
+
+        if (null != sig) {
+            hargs.add(new Object[] { Message.HeaderField.SIGNATURE,
+                    new Object[] { ArgumentType.SIGNATURE_STRING, sig } });
+            headers.put(Message.HeaderField.SIGNATURE, sig);
+            setArgs(args);
+        }
+
+        final byte[] blen = new byte[4];
+        appendBytes(blen);
+        append("ua(yv)", serial, hargs.toArray());
+        pad((byte) 8);
+
+        final long c = bytecounter;
+        if (null != sig) {
+            append(sig, args);
+        }
+        marshallint(bytecounter - c, blen, 0, 4);
+    }
+
+    public MethodReturn(final MethodCall mc, final String sig, final Object... args) throws DBusException {
+        this(null, mc, sig, args);
+    }
+
+    public MethodReturn(final String source, final MethodCall mc, final String sig, final Object... args)
+            throws DBusException {
+        this(source, mc.getSource(), mc.getSerial(), sig, args);
+        this.call = mc;
+    }
+
+    MethodCall call;
+
+    public MethodCall getCall() {
+        return call;
+    }
+
+    protected void setCall(final MethodCall call) {
+        this.call = call;
+    }
 }

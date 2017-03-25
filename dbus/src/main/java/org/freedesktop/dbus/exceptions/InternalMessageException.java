@@ -8,13 +8,12 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus.exceptions;
 
 @SuppressWarnings("serial")
-public class InternalMessageException extends DBusExecutionException implements NonFatalException
-{
-   public InternalMessageException(String message)
-   {
-      super (message);
-   }
+public class InternalMessageException extends DBusExecutionException implements NonFatalException {
+    public InternalMessageException(final String message) {
+        super(message);
+    }
 }

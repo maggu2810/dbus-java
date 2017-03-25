@@ -8,15 +8,14 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus.exceptions;
 
 import java.io.IOException;
 
 @SuppressWarnings("serial")
-public class MessageTypeException extends IOException implements NonFatalException
-{
-   public MessageTypeException(String message)
-   {
-      super(message);
-   }
+public class MessageTypeException extends IOException implements NonFatalException {
+    public MessageTypeException(final String message) {
+        super(message);
+    }
 }

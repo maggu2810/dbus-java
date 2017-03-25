@@ -8,13 +8,12 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus.exceptions;
 
 @SuppressWarnings("serial")
-public class FatalDBusException extends DBusException implements FatalException
-{
-   public FatalDBusException(String message)
-   {
-      super(message);
-   }
+public class FatalDBusException extends DBusException implements FatalException {
+    public FatalDBusException(final String message) {
+        super(message);
+    }
 }

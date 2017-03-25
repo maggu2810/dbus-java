@@ -8,6 +8,7 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus.viewer;
 
 import java.util.Iterator;
@@ -16,47 +17,40 @@ import java.util.NoSuchElementException;
 import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
-class SaveAllAction extends TabbedSaveAction
-{
+class SaveAllAction extends TabbedSaveAction {
 
-	private class TabIterator implements Iterator<TextFile>
-	{
-		private int i = 0;
-		/** {@inheritDoc} */
-		public boolean hasNext()
-		{
-			return i < tabbedPane.getTabCount();
-		}
+    private class TabIterator implements Iterator<TextFile> {
+        private int i = 0;
 
-		/** {@inheritDoc} */
-		public TextFile next()
-		{
-			if (hasNext())
-			{
-				int currentIndex = i;
-				i++;
-				return getTextFile(currentIndex);
-			}
-			throw new NoSuchElementException();
-		}
+        /** {@inheritDoc} */
+        public boolean hasNext() {
+            return i < tabbedPane.getTabCount();
+        }
 
-		/** {@inheritDoc} */
-		public void remove()
-		{
-			throw new UnsupportedOperationException();
-		}
+        /** {@inheritDoc} */
+        public TextFile next() {
+            if (hasNext()) {
+                final int currentIndex = i;
+                i++;
+                return getTextFile(currentIndex);
+            }
+            throw new NoSuchElementException();
+        }
 
-	}
+        /** {@inheritDoc} */
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
 
-	protected SaveAllAction(JTabbedPane tabbedPane)
-	{
-		super(tabbedPane, "Save All...");
-	}
+    }
 
-	/** {@inheritDoc} */
-	public Iterator<TextFile> iterator()
-	{
-		return new TabIterator();
-	}
-	
+    protected SaveAllAction(final JTabbedPane tabbedPane) {
+        super(tabbedPane, "Save All...");
+    }
+
+    /** {@inheritDoc} */
+    public Iterator<TextFile> iterator() {
+        return new TabIterator();
+    }
+
 }

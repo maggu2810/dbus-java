@@ -8,13 +8,12 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus.exceptions;
 
 @SuppressWarnings("serial")
-public class MarshallingException extends DBusException implements NonFatalException
-{
-   public MarshallingException(String message)
-   {
-      super(message);
-   }
+public class MarshallingException extends DBusException implements NonFatalException {
+    public MarshallingException(final String message) {
+        super(message);
+    }
 }

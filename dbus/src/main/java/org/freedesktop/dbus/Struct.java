@@ -8,6 +8,7 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus;
 
 /**
@@ -17,7 +18,7 @@ package org.freedesktop.dbus;
  * remote method should be annotated with the org.freedesktop.dbus.Position
  * annotation, in the order they should appear in to Struct to DBus.
  */
-public abstract class Struct extends Container
-{
-   public Struct() {}
+public abstract class Struct extends Container {
+    public Struct() {
+    }
 }

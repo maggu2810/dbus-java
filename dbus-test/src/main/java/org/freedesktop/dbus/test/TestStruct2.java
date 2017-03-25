@@ -8,24 +8,24 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus.test;
+
+import java.util.List;
 
 import org.freedesktop.dbus.Position;
 import org.freedesktop.dbus.Struct;
 import org.freedesktop.dbus.Variant;
 import org.freedesktop.dbus.exceptions.DBusException;
 
-import java.util.List;
+public final class TestStruct2 extends Struct {
+    @Position(0)
+    public final List<String> a;
+    @Position(1)
+    public final Variant<? extends Object> b;
 
-public final class TestStruct2 extends Struct
-{
-   @Position(0)
-   public final List<String> a;
-   @Position(1)
-   public final Variant<? extends Object> b;
-   public TestStruct2(List<String> a, Variant<? extends Object> b) throws DBusException
-   {
-      this.a = a;
-      this.b = b;
-   }
+    public TestStruct2(final List<String> a, final Variant<? extends Object> b) throws DBusException {
+        this.a = a;
+        this.b = b;
+    }
 }

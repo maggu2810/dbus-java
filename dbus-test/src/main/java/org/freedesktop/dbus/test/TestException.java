@@ -8,6 +8,7 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus.test;
 
 import org.freedesktop.DBus.Description;
@@ -15,10 +16,8 @@ import org.freedesktop.dbus.exceptions.DBusExecutionException;
 
 @Description("A test exception to throw over DBus")
 @SuppressWarnings("serial")
-public class TestException extends DBusExecutionException
-{
-   public TestException(String message)
-   {
-      super (message);
-   }
+public class TestException extends DBusExecutionException {
+    public TestException(final String message) {
+        super(message);
+    }
 }

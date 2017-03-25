@@ -8,116 +8,117 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus.viewer;
 
 import org.freedesktop.DBus.Introspectable;
 import org.freedesktop.dbus.UInt32;
 
-/** A summary class for a dbus entry for use in a table model
+/**
+ * A summary class for a dbus entry for use in a table model
  *
  * @author pete
  * @since 10/02/2006
  */
-public class DBusEntry
-{
-	private String name;
-	
-	private String path;
+public class DBusEntry {
+    private String name;
 
-	private UInt32 user;
+    private String path;
 
-	private String owner;
+    private UInt32 user;
 
-	private Introspectable introspectable;
+    private String owner;
 
-	/** Assign the name
-	 * 
-	 * @param name The name.
-	 */
-	public void setName(String name)
-	{
-		this.name = name;
-	}
+    private Introspectable introspectable;
 
-	/** Retrieve the name
-	 * 
-	 * @return The name.
-	 */
-	public String getName()
-	{
-		return name;
-	}
+    /**
+     * Assign the name
+     *
+     * @param name The name.
+     */
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-	/** Assign the user
-	 * 
-	 * @param user The user.
-	 */
-	public void setUser(UInt32 user)
-	{
-		this.user = user;
-	}
+    /**
+     * Retrieve the name
+     *
+     * @return The name.
+     */
+    public String getName() {
+        return name;
+    }
 
-	/** Retrieve the user
-	 * 
-	 * @return The user.
-	 */
-	public UInt32 getUser()
-	{
-		return user;
-	}
+    /**
+     * Assign the user
+     *
+     * @param user The user.
+     */
+    public void setUser(final UInt32 user) {
+        this.user = user;
+    }
 
-	/** Assign the owner
-	 * 
-	 * @param owner The owner.
-	 */
-	public void setOwner(String owner)
-	{
-		this.owner = owner;
-	}
+    /**
+     * Retrieve the user
+     *
+     * @return The user.
+     */
+    public UInt32 getUser() {
+        return user;
+    }
 
-	/** Retrieve the owner
-	 * 
-	 * @return The owner.
-	 */
-	public String getOwner()
-	{
-		return owner;
-	}
+    /**
+     * Assign the owner
+     *
+     * @param owner The owner.
+     */
+    public void setOwner(final String owner) {
+        this.owner = owner;
+    }
 
-	/** Assign the introspectable
-	 * 
-	 * @param introspectable The introspectable.
-	 */
-	public void setIntrospectable(Introspectable introspectable)
-	{
-		this.introspectable = introspectable;
-	}
+    /**
+     * Retrieve the owner
+     *
+     * @return The owner.
+     */
+    public String getOwner() {
+        return owner;
+    }
 
-	/** Retrieve the introspectable
-	 * 
-	 * @return The introspectable.
-	 */
-	public Introspectable getIntrospectable()
-	{
-		return introspectable;
-	}
-	
-	/**
-	 * retrieve the path parameter
-	 * 
-	 * @return
-	 */
-	public String getPath() {
-		return path;
-	}
-	
-	/**
-	 * set the path parameter
-	 * 
-	 * @param path
-	 */
-	public void setPath(String path) {
-		this.path = path;
-	}
-	
+    /**
+     * Assign the introspectable
+     *
+     * @param introspectable The introspectable.
+     */
+    public void setIntrospectable(final Introspectable introspectable) {
+        this.introspectable = introspectable;
+    }
+
+    /**
+     * Retrieve the introspectable
+     *
+     * @return The introspectable.
+     */
+    public Introspectable getIntrospectable() {
+        return introspectable;
+    }
+
+    /**
+     * retrieve the path parameter
+     *
+     * @return
+     */
+    public String getPath() {
+        return path;
+    }
+
+    /**
+     * set the path parameter
+     *
+     * @param path
+     */
+    public void setPath(final String path) {
+        this.path = path;
+    }
+
 }

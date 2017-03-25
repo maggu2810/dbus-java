@@ -8,6 +8,7 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus.viewer;
 
 import java.awt.BorderLayout;
@@ -33,116 +34,100 @@ import org.freedesktop.DBus.Introspectable;
 import org.freedesktop.dbus.bin.CreateInterface;
 
 @SuppressWarnings("serial")
-final class IntrospectAction extends AbstractAction implements ListSelectionListener
-{
-	private final JTable table;
+final class IntrospectAction extends AbstractAction implements ListSelectionListener {
+    private final JTable table;
 
-	IntrospectAction(JTable table)
-	{
-		super("Introspect");
-		setEnabled(false);
-		this.table = table;
-		
+    IntrospectAction(final JTable table) {
+        super("Introspect");
+        setEnabled(false);
+        this.table = table;
 
-		ListSelectionModel selectionModel = table.getSelectionModel();
-		selectionModel.addListSelectionListener(this);
-		selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-	}
-	
-	/** {@inheritDoc} */
-	public void valueChanged(ListSelectionEvent e)
-	{
-		if (!e.getValueIsAdjusting())
-		{
-			DBusTableModel model = (DBusTableModel) table.getModel();
-			int selection = table.getSelectedRow();
-			if (selection > -1 && selection < model.getRowCount())
-			{
-				DBusEntry entry = model.getEntry(selection);
-				final Introspectable introspectable = entry.getIntrospectable();
-				setEnabled(introspectable != null);
-			}
-		}
-	}			
+        final ListSelectionModel selectionModel = table.getSelectionModel();
+        selectionModel.addListSelectionListener(this);
+        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    }
 
-	/** {@inheritDoc} */
-	public void actionPerformed(ActionEvent e) 
-	{
-	
-		int row = table.getSelectedRow();
-		DBusTableModel model = (DBusTableModel) table.getModel();
-		if (row > -1 && row < model.getRowCount())
-		{
-			DBusEntry entry = model.getEntry(row);
-			final String xmlFile = entry.getName() + ".xml";
-			final Introspectable introspectable = entry.getIntrospectable();
-			new Thread(new Runnable()
-			{
-				public void run()
-				{
-					
-					StringStreamFactory factory = new StringStreamFactory();
-					CreateInterface createInterface = new CreateInterface(factory, false);
-					try
-					{
-						String xml = introspectable.Introspect();
-						
-						String docType = "<!DOCTYPE node PUBLIC \"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN\"\n\"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd\">";
-	
-						createInterface.createInterface(new StringReader(xml.replace(docType, "")));
-						final JTabbedPane tabbedPane = new JTabbedPane();
-						
-						tabbedPane.addTab(xmlFile, createSourceTab(xmlFile, xml));
-						
-						for (String file : factory.streamMap.keySet())
-						{
-							final String source = factory.streamMap.get(file).toString();
-							
-							tabbedPane.addTab(file, createSourceTab(file, source));
-						}
-						tabbedPane.setPreferredSize(new Dimension(600, 400));
-						
-						final JPanel introspectionPanel = new JPanel(new BorderLayout());
-						introspectionPanel.add(tabbedPane, BorderLayout.CENTER);
+    /** {@inheritDoc} */
+    public void valueChanged(final ListSelectionEvent e) {
+        if (!e.getValueIsAdjusting()) {
+            final DBusTableModel model = (DBusTableModel) table.getModel();
+            final int selection = table.getSelectedRow();
+            if (selection > -1 && selection < model.getRowCount()) {
+                final DBusEntry entry = model.getEntry(selection);
+                final Introspectable introspectable = entry.getIntrospectable();
+                setEnabled(introspectable != null);
+            }
+        }
+    }
 
-						JPanel southPanel = new JPanel();
-						southPanel.add(new JButton(new SaveFileAction(tabbedPane)));
-						southPanel.add(new JButton(new SaveAllAction(tabbedPane)));
-						introspectionPanel.add(southPanel, BorderLayout.SOUTH);
-						
-						SwingUtilities.invokeLater(new Runnable()
-						{
-							@SuppressWarnings("synthetic-access")
-							public void run()
-							{
-								JOptionPane.showMessageDialog(table, introspectionPanel, "Introspection", JOptionPane.PLAIN_MESSAGE);
-							}
-						});
-						
-					}
-					catch (final Exception e)
-					{
-						e.printStackTrace();
-						SwingUtilities.invokeLater(new Runnable()
-						{
-							@SuppressWarnings("synthetic-access")
-							public void run()
-							{
-								JOptionPane.showMessageDialog(table, e.getMessage(), "Introspection Failed", JOptionPane.ERROR_MESSAGE);
-							}
-						});
-					}
-				}
-	
-				private JScrollPane createSourceTab(String file, final String source)
-				{
-					JTextArea area = new JTextArea(source);
-					area.setLineWrap(true);
-					area.setWrapStyleWord(true);
-					return new JScrollPane(area, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-				}
-			}).start();
-			
-		}
-	}
+    /** {@inheritDoc} */
+    public void actionPerformed(final ActionEvent e) {
+
+        final int row = table.getSelectedRow();
+        final DBusTableModel model = (DBusTableModel) table.getModel();
+        if (row > -1 && row < model.getRowCount()) {
+            final DBusEntry entry = model.getEntry(row);
+            final String xmlFile = entry.getName() + ".xml";
+            final Introspectable introspectable = entry.getIntrospectable();
+            new Thread(new Runnable() {
+                public void run() {
+
+                    final StringStreamFactory factory = new StringStreamFactory();
+                    final CreateInterface createInterface = new CreateInterface(factory, false);
+                    try {
+                        final String xml = introspectable.Introspect();
+
+                        final String docType = "<!DOCTYPE node PUBLIC \"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN\"\n\"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd\">";
+
+                        createInterface.createInterface(new StringReader(xml.replace(docType, "")));
+                        final JTabbedPane tabbedPane = new JTabbedPane();
+
+                        tabbedPane.addTab(xmlFile, createSourceTab(xmlFile, xml));
+
+                        for (final String file : factory.streamMap.keySet()) {
+                            final String source = factory.streamMap.get(file).toString();
+
+                            tabbedPane.addTab(file, createSourceTab(file, source));
+                        }
+                        tabbedPane.setPreferredSize(new Dimension(600, 400));
+
+                        final JPanel introspectionPanel = new JPanel(new BorderLayout());
+                        introspectionPanel.add(tabbedPane, BorderLayout.CENTER);
+
+                        final JPanel southPanel = new JPanel();
+                        southPanel.add(new JButton(new SaveFileAction(tabbedPane)));
+                        southPanel.add(new JButton(new SaveAllAction(tabbedPane)));
+                        introspectionPanel.add(southPanel, BorderLayout.SOUTH);
+
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @SuppressWarnings("synthetic-access")
+                            public void run() {
+                                JOptionPane.showMessageDialog(table, introspectionPanel, "Introspection",
+                                        JOptionPane.PLAIN_MESSAGE);
+                            }
+                        });
+
+                    } catch (final Exception e) {
+                        e.printStackTrace();
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @SuppressWarnings("synthetic-access")
+                            public void run() {
+                                JOptionPane.showMessageDialog(table, e.getMessage(), "Introspection Failed",
+                                        JOptionPane.ERROR_MESSAGE);
+                            }
+                        });
+                    }
+                }
+
+                private JScrollPane createSourceTab(final String file, final String source) {
+                    final JTextArea area = new JTextArea(source);
+                    area.setLineWrap(true);
+                    area.setWrapStyleWord(true);
+                    return new JScrollPane(area, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                }
+            }).start();
+
+        }
+    }
 }

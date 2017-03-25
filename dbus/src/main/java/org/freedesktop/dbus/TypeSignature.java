@@ -8,30 +8,32 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus;
 
 import java.lang.reflect.Type;
+
 import org.freedesktop.dbus.exceptions.DBusException;
 
-public class TypeSignature 
-{
-   String sig;
-   public TypeSignature(String sig)
-   {
-      this.sig = sig;
-   }
-   public TypeSignature(Type[] types) throws DBusException
-   {
-      StringBuffer sb = new StringBuffer();
-      for (Type t: types) {
-         String[] ts = Marshalling.getDBusType(t);
-         for (String s: ts)
-            sb.append(s);
-      }
-      this.sig = sb.toString();
-   }
-   public String getSig()
-   { 
-      return sig;
-   }
+public class TypeSignature {
+    String sig;
+
+    public TypeSignature(final String sig) {
+        this.sig = sig;
+    }
+
+    public TypeSignature(final Type[] types) throws DBusException {
+        final StringBuffer sb = new StringBuffer();
+        for (final Type t : types) {
+            final String[] ts = Marshalling.getDBusType(t);
+            for (final String s : ts) {
+                sb.append(s);
+            }
+        }
+        this.sig = sb.toString();
+    }
+
+    public String getSig() {
+        return sig;
+    }
 }

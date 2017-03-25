@@ -8,6 +8,7 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus;
 
 import org.freedesktop.dbus.exceptions.DBusExecutionException;
@@ -15,8 +16,8 @@ import org.freedesktop.dbus.exceptions.DBusExecutionException;
 /**
  * Interface for callbacks in async mode
  */
-public interface CallbackHandler<ReturnType>
-{
-   public void handle(ReturnType r);
-   public void handleError(DBusExecutionException e);
+public interface CallbackHandler<ReturnType> {
+    public void handle(ReturnType r);
+
+    public void handleError(DBusExecutionException e);
 }

@@ -8,49 +8,81 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus;
 
-class RemoteObject
-{
-   String busname;
-   String objectpath;
-   Class<? extends DBusInterface> iface;
-   boolean autostart;
-   public RemoteObject(String busname, String objectpath, Class<? extends DBusInterface> iface, boolean autostart)
-   {
-      this.busname = busname;
-      this.objectpath = objectpath;
-      this.iface = iface;
-      this.autostart = autostart;
-   }
-   public boolean equals(Object o)
-   {
-      if (!(o instanceof RemoteObject)) return false;
-      RemoteObject them = (RemoteObject) o;
+class RemoteObject {
+    String busname;
+    String objectpath;
+    Class<? extends DBusInterface> iface;
+    boolean autostart;
 
-      if (!them.objectpath.equals(this.objectpath)) return false;
-      
-      if (null == this.busname && null != them.busname) return false;
-      if (null != this.busname && null == them.busname) return false;
-      if (null != them.busname && !them.busname.equals(this.busname)) return false;
-      
-      if (null == this.iface && null != them.iface) return false;
-      if (null != this.iface && null == them.iface) return false;
-      if (null != them.iface && !them.iface.equals(this.iface)) return false;
-      
-      return true;
-   }
-   public int hashCode()
-   {
-      return (null == busname ? 0 : busname.hashCode()) + objectpath.hashCode() +
-         (null == iface ? 0 : iface.hashCode());
-   }
-   public boolean autoStarting() { return autostart; }
-   public String getBusName() { return busname; }
-   public String getObjectPath() { return objectpath; }
-   public Class<? extends DBusInterface>  getInterface() { return iface; }
-   public String toString()
-   {
-      return busname+":"+objectpath+":"+iface;
-   }
+    public RemoteObject(final String busname, final String objectpath, final Class<? extends DBusInterface> iface,
+            final boolean autostart) {
+        this.busname = busname;
+        this.objectpath = objectpath;
+        this.iface = iface;
+        this.autostart = autostart;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (!(o instanceof RemoteObject)) {
+            return false;
+        }
+        final RemoteObject them = (RemoteObject) o;
+
+        if (!them.objectpath.equals(this.objectpath)) {
+            return false;
+        }
+
+        if (null == this.busname && null != them.busname) {
+            return false;
+        }
+        if (null != this.busname && null == them.busname) {
+            return false;
+        }
+        if (null != them.busname && !them.busname.equals(this.busname)) {
+            return false;
+        }
+
+        if (null == this.iface && null != them.iface) {
+            return false;
+        }
+        if (null != this.iface && null == them.iface) {
+            return false;
+        }
+        if (null != them.iface && !them.iface.equals(this.iface)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (null == busname ? 0 : busname.hashCode()) + objectpath.hashCode()
+                + (null == iface ? 0 : iface.hashCode());
+    }
+
+    public boolean autoStarting() {
+        return autostart;
+    }
+
+    public String getBusName() {
+        return busname;
+    }
+
+    public String getObjectPath() {
+        return objectpath;
+    }
+
+    public Class<? extends DBusInterface> getInterface() {
+        return iface;
+    }
+
+    @Override
+    public String toString() {
+        return busname + ":" + objectpath + ":" + iface;
+    }
 }

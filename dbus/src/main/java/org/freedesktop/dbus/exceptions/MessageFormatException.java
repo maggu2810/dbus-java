@@ -8,16 +8,15 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus.exceptions;
 
 /**
  * Thrown if a message is formatted incorrectly.
  */
 @SuppressWarnings("serial")
-public class MessageFormatException extends DBusException implements NonFatalException
-{
-   public MessageFormatException(String message)
-   {
-      super (message);
-   }
+public class MessageFormatException extends DBusException implements NonFatalException {
+    public MessageFormatException(final String message) {
+        super(message);
+    }
 }

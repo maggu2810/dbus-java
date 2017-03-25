@@ -8,8 +8,8 @@
 
    Full licence texts are included in the COPYING file with this program.
 */
+
 package org.freedesktop.dbus.exceptions;
 
-public interface FatalException
-{
+public interface FatalException {
 }
