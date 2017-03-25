@@ -742,7 +742,7 @@ public class Message {
                     // Variants are marshalled as a signature
                     // followed by the value.
                     if (data instanceof Variant) {
-                        final Variant var = (Variant) data;
+                        final Variant<?> var = (Variant<?>) data;
                         appendone(new byte[] { ArgumentType.SIGNATURE }, 0, var.getSig());
                         appendone(var.getSig().getBytes(), 0, var.getValue());
                     } else if (data instanceof Object[]) {

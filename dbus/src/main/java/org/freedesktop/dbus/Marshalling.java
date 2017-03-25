@@ -485,7 +485,7 @@ public class Marshalling {
 
         // its a wrapped variant, unwrap it
         if (type instanceof TypeVariable && parameter instanceof Variant) {
-            parameter = ((Variant) parameter).getValue();
+            parameter = ((Variant<?>) parameter).getValue();
         }
 
         // Turn a signature into a Type[]

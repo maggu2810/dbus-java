@@ -78,12 +78,11 @@ public class cross_test_server
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     @DBus.Description("Returns whatever it is passed")
     public <T> Variant<T> Identity(final Variant<T> input) {
         done.add("org.freedesktop.DBus.Binding.Tests.Identity");
         notdone.remove("org.freedesktop.DBus.Binding.Tests.Identity");
-        return new Variant(input.getValue());
+        return new Variant<>(input.getValue());
     }
 
     @Override

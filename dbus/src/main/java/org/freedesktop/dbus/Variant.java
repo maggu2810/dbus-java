@@ -144,7 +144,6 @@ public class Variant<T> {
 
     /** Compare this Variant with another by comparing contents */
     @Override
-    @SuppressWarnings("unchecked")
     public boolean equals(final Object other) {
         if (null == other) {
             return false;
@@ -152,6 +151,6 @@ public class Variant<T> {
         if (!(other instanceof Variant)) {
             return false;
         }
-        return this.o.equals(((Variant<? extends Object>) other).o);
+        return this.o.equals(((Variant<?>) other).o);
     }
 }

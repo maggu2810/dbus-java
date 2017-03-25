@@ -22,9 +22,9 @@ public final class TestStruct extends Struct {
     @Position(1)
     public final UInt32 b;
     @Position(2)
-    public final Variant<? extends Object> c;
+    public final Variant<?> c;
 
-    public TestStruct(final String a, final UInt32 b, final Variant<? extends Object> c) {
+    public TestStruct(final String a, final UInt32 b, final Variant<?> c) {
         this.a = a;
         this.b = b;
         this.c = c;

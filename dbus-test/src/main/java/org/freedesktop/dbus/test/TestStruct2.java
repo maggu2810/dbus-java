@@ -22,9 +22,9 @@ public final class TestStruct2 extends Struct {
     @Position(0)
     public final List<String> a;
     @Position(1)
-    public final Variant<? extends Object> b;
+    public final Variant<?> b;
 
-    public TestStruct2(final List<String> a, final Variant<? extends Object> b) throws DBusException {
+    public TestStruct2(final List<String> a, final Variant<?> b) throws DBusException {
         this.a = a;
         this.b = b;
     }

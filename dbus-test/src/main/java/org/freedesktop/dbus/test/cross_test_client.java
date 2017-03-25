@@ -258,17 +258,19 @@ public class cross_test_client implements DBus.Binding.TestClient, DBusSigHandle
                 }
 
             } else if (Variant.class.isAssignableFrom(c)) {
-                vs.addAll(PrimitizeRecurse(((Variant) a).getValue(), ((Variant) a).getType()));
+                vs.addAll(PrimitizeRecurse(((Variant<?>) a).getValue(),
+                        ((Variant<?>) a).getType()));
             }
         } else if (Variant.class.isAssignableFrom((Class<?>) t)) {
-            vs.addAll(PrimitizeRecurse(((Variant) a).getValue(), ((Variant) a).getType()));
+            vs.addAll(PrimitizeRecurse(((Variant<?>) a).getValue(),
+                    ((Variant<?>) a).getType()));
         } else if (t instanceof Class && ((Class<?>) t).isArray()) {
             final Type t2 = ((Class<?>) t).getComponentType();
             for (int i = 0; i < Array.getLength(a); i++) {
                 vs.addAll(PrimitizeRecurse(Array.get(a, i), t2));
             }
         } else {
-            vs.add(new Variant(a));
+            vs.add(new Variant<>(a));
         }
 
         return vs;

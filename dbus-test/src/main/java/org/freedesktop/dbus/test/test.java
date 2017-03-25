@@ -323,7 +323,7 @@ class testclass
 
     @Override
     @SuppressWarnings("unchecked")
-    public void complexv(final Variant<? extends Object> v) {
+    public void complexv(final Variant<?> v) {
         if (!"a{ss}".equals(v.getSig()) || !(v.getValue() instanceof Map)
                 || ((Map<Object, Object>) v.getValue()).size() != 1
                 || !"moo".equals(((Map<Object, Object>) v.getValue()).get("cow"))) {
@@ -354,7 +354,7 @@ class testclass
     }
 
     @Override
-    public Map<String, Variant> GetAll(final String interface_name) {
+    public Map<String, Variant<?>> GetAll(final String interface_name) {
         return new HashMap<>();
     }
 
@@ -964,7 +964,7 @@ public class test {
             System.out.print("testing complex variants...");
             final Map m = new HashMap();
             m.put("cow", "moo");
-            tri2.complexv(new Variant(m, "a{ss}"));
+            tri2.complexv(new Variant<>(m, "a{ss}"));
             System.out.println("done");
 
             System.out.print("testing recursion...");

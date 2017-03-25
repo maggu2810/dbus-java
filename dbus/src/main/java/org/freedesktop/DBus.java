@@ -91,7 +91,7 @@ public interface DBus extends DBusInterface {
          * @param interface_name The interface the properties is associated with.
          * @return The properties mapped to their values.
          */
-        public Map<String, Variant> GetAll(String interface_name);
+        public Map<String, Variant<?>> GetAll(String interface_name);
     }
 
     /**
