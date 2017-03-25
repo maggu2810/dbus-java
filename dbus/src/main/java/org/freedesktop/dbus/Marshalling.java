@@ -421,7 +421,6 @@ public class Marshalling {
      * @return The converted parameters.
      * @throws DBusException Thrown if there is an error in converting the objects.
      */
-    @SuppressWarnings("unchecked")
     public static Object[] convertParameters(Object[] parameters, Type[] types, final AbstractConnection conn)
             throws DBusException {
         if (null == parameters) {

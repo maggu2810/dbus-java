@@ -564,7 +564,6 @@ public abstract class AbstractConnection {
      * @throws DBusException If listening for the signal on the bus failed.
      * @throws ClassCastException If type is not a sub-type of DBusSignal.
      */
-    @SuppressWarnings("unchecked")
     public <T extends DBusSignal> void addSigHandler(final Class<T> type, final DBusSigHandler<T> handler)
             throws DBusException {
         if (!DBusSignal.class.isAssignableFrom(type)) {
@@ -583,7 +582,6 @@ public abstract class AbstractConnection {
      * @throws DBusException If listening for the signal on the bus failed.
      * @throws ClassCastException If type is not a sub-type of DBusSignal.
      */
-    @SuppressWarnings("unchecked")
     public <T extends DBusSignal> void addSigHandler(final Class<T> type, final DBusInterface object,
             final DBusSigHandler<T> handler) throws DBusException {
         if (!DBusSignal.class.isAssignableFrom(type)) {
@@ -700,7 +698,6 @@ public abstract class AbstractConnection {
      * @param callback The callback handler.
      * @param parameters The parameters to call the method with.
      */
-    @SuppressWarnings("unchecked")
     public <A> void callWithCallback(final DBusInterface object, final String m, final CallbackHandler<A> callback,
             final Object... parameters) {
         logger.trace("callWithCallback({}, {}, {},...)", object, m, callback);
@@ -740,7 +737,6 @@ public abstract class AbstractConnection {
      * @param parameters The parameters to call the method with.
      * @return A handle to the call.
      */
-    @SuppressWarnings("unchecked")
     public DBusAsyncReply callMethodAsync(final DBusInterface object, final String m, final Object... parameters) {
         final Class<?>[] types = new Class[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
@@ -926,7 +922,7 @@ public abstract class AbstractConnection {
         });
     }
 
-    @SuppressWarnings({ "unchecked", "deprecation" })
+    @SuppressWarnings({ "unchecked" })
     private void handleMessage(final DBusSignal s) {
         logger.debug("Handling incoming signal: {}", s);
         final Vector<DBusSigHandler<? extends DBusSignal>> v = new Vector<>();

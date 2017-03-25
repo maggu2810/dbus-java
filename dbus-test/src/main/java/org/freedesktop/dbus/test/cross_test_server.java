@@ -306,7 +306,6 @@ public class cross_test_server
 
     @Override
     @DBus.Description("Given any compound type as a variant, return all the primitive types recursively contained within as an array of variants")
-    @SuppressWarnings("unchecked")
     public List<Variant<Object>> Primitize(final Variant<Object> a) {
         done.add("org.freedesktop.DBus.Binding.Tests.Primitize");
         notdone.remove("org.freedesktop.DBus.Binding.Tests.Primitize");

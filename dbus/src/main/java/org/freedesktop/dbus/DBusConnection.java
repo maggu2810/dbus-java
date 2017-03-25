@@ -822,7 +822,6 @@ public class DBusConnection extends AbstractConnection {
      * @throws DBusException If listening for the signal on the bus failed.
      * @throws ClassCastException If type is not a sub-type of DBusSignal.
      */
-    @SuppressWarnings("unchecked")
     public <T extends DBusSignal> void addSigHandler(final Class<T> type, final String source,
             final DBusSigHandler<T> handler) throws DBusException {
         if (!DBusSignal.class.isAssignableFrom(type)) {
@@ -851,7 +850,6 @@ public class DBusConnection extends AbstractConnection {
      * @throws DBusException If listening for the signal on the bus failed.
      * @throws ClassCastException If type is not a sub-type of DBusSignal.
      */
-    @SuppressWarnings("unchecked")
     public <T extends DBusSignal> void addSigHandler(final Class<T> type, final String source,
             final DBusInterface object, final DBusSigHandler<T> handler) throws DBusException {
         if (!DBusSignal.class.isAssignableFrom(type)) {

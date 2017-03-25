@@ -617,7 +617,6 @@ public class DBusDaemon extends Thread {
         _run = false;
     }
 
-    @SuppressWarnings("unchecked")
     private void send(final Connstruct c, final Message m) {
         send(c, m, false);
     }
@@ -656,7 +655,6 @@ public class DBusDaemon extends Thread {
         LOGGER.debug("exit");
     }
 
-    @SuppressWarnings("unchecked")
     private List<Connstruct> findSignalMatches(final DBusSignal sig) {
         LOGGER.debug("enter");
         List<Connstruct> l;
@@ -668,7 +666,6 @@ public class DBusDaemon extends Thread {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void run() {
         LOGGER.debug("enter");
         while (_run) {

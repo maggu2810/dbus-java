@@ -274,12 +274,10 @@ public class cross_test_client implements DBus.Binding.TestClient, DBusSigHandle
         return vs;
     }
 
-    @SuppressWarnings("unchecked")
     public static List<Variant<Object>> Primitize(final Variant<Object> a) {
         return PrimitizeRecurse(a.getValue(), a.getType());
     }
 
-    @SuppressWarnings("unchecked")
     public static void primitizeTest(final DBus.Binding.Tests tests, final Object input) {
         final Variant<Object> in = new Variant<>(input);
         final List<Variant<Object>> vs = Primitize(in);
