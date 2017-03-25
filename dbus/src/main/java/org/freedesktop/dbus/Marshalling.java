@@ -478,7 +478,7 @@ public class Marshalling {
     @SuppressWarnings("unchecked")
     static Object deSerializeParameter(Object parameter, final Type type, final AbstractConnection conn)
             throws Exception {
-        LOGGER.trace("Deserializing from {} to {}", parameter.getClass(), type.getClass());
+        LOGGER.trace("Deserializing from {} to {}", parameter == null ? null : parameter.getClass(), type.getClass());
         if (null == parameter) {
             return null;
         }
