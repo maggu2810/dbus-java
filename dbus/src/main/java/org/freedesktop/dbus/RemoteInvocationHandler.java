@@ -19,16 +19,17 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.text.MessageFormat;
-import java.util.Arrays;
 
 import org.freedesktop.DBus;
 import org.freedesktop.dbus.exceptions.DBusException;
 import org.freedesktop.dbus.exceptions.DBusExecutionException;
 import org.freedesktop.dbus.exceptions.NotConnected;
-
-import cx.ath.matthew.debug.Debug;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class RemoteInvocationHandler implements InvocationHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RemoteInvocationHandler.class);
+
     public static final int CALL_TYPE_SYNC = 0;
     public static final int CALL_TYPE_ASYNC = 1;
     public static final int CALL_TYPE_CALLBACK = 2;
@@ -45,14 +46,11 @@ class RemoteInvocationHandler implements InvocationHandler {
             }
         } else {
             try {
-                if (Debug.debug) {
-                    Debug.print(Debug.VERBOSE, "Converting return parameters from " + Arrays.deepToString(rp)
-                            + " to type " + m.getGenericReturnType());
-                }
+                LOGGER.trace("Converting return parameters from {} to type {}", rp, m.getGenericReturnType());
                 rp = Marshalling.deSerializeParameters(rp, new Type[] { m.getGenericReturnType() }, conn);
             } catch (final Exception e) {
-                if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                    Debug.print(Debug.ERR, e);
+                if (AbstractConnection.EXCEPTION_DEBUG) {
+                    LOGGER.error("Exception", e);
                 }
                 throw new DBusExecutionException(
                         MessageFormat.format(_("Wrong return type (failed to de-serialize correct types: {0} )"),
@@ -80,8 +78,8 @@ class RemoteInvocationHandler implements InvocationHandler {
                 try {
                     return cons.newInstance(rp);
                 } catch (final Exception e) {
-                    if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                        Debug.print(Debug.ERR, e);
+                    if (AbstractConnection.EXCEPTION_DEBUG) {
+                        LOGGER.error("Excpetion", e);
                     }
                     throw new DBusException(e.getMessage());
                 }
@@ -132,8 +130,8 @@ class RemoteInvocationHandler implements InvocationHandler {
                 }
             }
         } catch (final DBusException DBe) {
-            if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, DBe);
+            if (AbstractConnection.EXCEPTION_DEBUG) {
+                LOGGER.error("Exception", DBe);
             }
             throw new DBusExecutionException(_("Failed to construct outgoing method call: ") + DBe.getMessage());
         }
@@ -147,9 +145,7 @@ class RemoteInvocationHandler implements InvocationHandler {
                 return new DBusAsyncReply(call, m, conn);
             case CALL_TYPE_CALLBACK:
                 synchronized (conn.pendingCallbacks) {
-                    if (Debug.debug) {
-                        Debug.print(Debug.VERBOSE, "Queueing Callback " + callback + " for " + call);
-                    }
+                    LOGGER.trace("Queueing Callback {} for {}", callback, call);
                     conn.pendingCallbacks.put(call, callback);
                     conn.pendingCallbackReplys.put(call, new DBusAsyncReply(call, m, conn));
                 }
@@ -177,8 +173,8 @@ class RemoteInvocationHandler implements InvocationHandler {
         try {
             return convertRV(reply.getSig(), reply.getParameters(), m, conn);
         } catch (final DBusException e) {
-            if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, e);
+            if (AbstractConnection.EXCEPTION_DEBUG) {
+                LOGGER.error("Exception", e);
             }
             throw new DBusExecutionException(e.getMessage());
         }

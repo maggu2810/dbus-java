@@ -17,17 +17,18 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
 import org.freedesktop.dbus.exceptions.DBusException;
 import org.freedesktop.dbus.exceptions.MessageFormatException;
-
-import cx.ath.matthew.debug.Debug;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DBusSignal extends Message {
+    private final Logger logger = LoggerFactory.getLogger(DBusSignal.class);
+
     DBusSignal() {
     }
 
@@ -153,9 +154,7 @@ public class DBusSignal extends Message {
         if (null == c) {
             c = createSignalClass(intname, signame);
         }
-        if (Debug.debug) {
-            Debug.print(Debug.DEBUG, "Converting signal to type: " + c);
-        }
+        logger.debug("Converting signal to type: {}", c);
         Type[] types = typeCache.get(c);
         Constructor<? extends DBusSignal> con = conCache.get(c);
         if (null == types) {
@@ -185,10 +184,7 @@ public class DBusSignal extends Message {
                 params[0] = getPath();
                 System.arraycopy(args, 0, params, 1, args.length);
 
-                if (Debug.debug) {
-                    Debug.print(Debug.DEBUG,
-                            "Creating signal of type " + c + " with parameters " + Arrays.deepToString(params));
-                }
+                logger.debug("Creating signal of type {} with parameters {}", c, params);
                 s = con.newInstance(params);
             }
             s.headers = headers;
@@ -196,8 +192,8 @@ public class DBusSignal extends Message {
             s.bytecounter = wiredata.length;
             return s;
         } catch (final Exception e) {
-            if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, e);
+            if (AbstractConnection.EXCEPTION_DEBUG) {
+                logger.error("Exception", e);
             }
             throw new DBusException(e.getMessage());
         }
@@ -272,8 +268,8 @@ public class DBusSignal extends Message {
                 headers.put(Message.HeaderField.SIGNATURE, sig);
                 setArgs(args);
             } catch (final Exception e) {
-                if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                    Debug.print(Debug.ERR, e);
+                if (AbstractConnection.EXCEPTION_DEBUG) {
+                    logger.error("Exception", e);
                 }
                 throw new DBusException(_("Failed to add signal parameters: ") + e.getMessage());
             }

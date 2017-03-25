@@ -21,13 +21,15 @@ import java.util.Iterator;
 import org.freedesktop.DBus.Error.NoReply;
 import org.freedesktop.dbus.exceptions.DBusException;
 import org.freedesktop.dbus.exceptions.DBusExecutionException;
-
-import cx.ath.matthew.debug.Debug;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A handle to an asynchronous method call.
  */
 public class DBusAsyncReply<ReturnType> {
+    private final Logger logger = LoggerFactory.getLogger(DBusAsyncReply.class);
+
     /**
      * Check if any of a set of asynchronous calls have had a reply.
      *
@@ -70,8 +72,8 @@ public class DBusAsyncReply<ReturnType> {
                 } catch (final DBusExecutionException DBEe) {
                     error = DBEe;
                 } catch (final DBusException DBe) {
-                    if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                        Debug.print(Debug.ERR, DBe);
+                    if (AbstractConnection.EXCEPTION_DEBUG) {
+                        logger.error("Exception", DBe);
                     }
                     error = new DBusExecutionException(DBe.getMessage());
                 }

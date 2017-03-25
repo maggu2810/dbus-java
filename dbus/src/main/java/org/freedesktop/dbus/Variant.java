@@ -18,8 +18,8 @@ import java.text.MessageFormat;
 import java.util.Vector;
 
 import org.freedesktop.dbus.exceptions.DBusException;
-
-import cx.ath.matthew.debug.Debug;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A Wrapper class for Variant values.
@@ -28,6 +28,8 @@ import cx.ath.matthew.debug.Debug;
  * The Variant may be parameterized to restrict the types it may accept.
  */
 public class Variant<T> {
+    private final Logger logger = LoggerFactory.getLogger(Variant.class);
+
     private final T o;
     private final Type type;
     private final String sig;
@@ -50,8 +52,8 @@ public class Variant<T> {
             }
             this.sig = ss[0];
         } catch (final DBusException DBe) {
-            if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, DBe);
+            if (AbstractConnection.EXCEPTION_DEBUG) {
+                logger.error("Exception", DBe);
             }
             throw new IllegalArgumentException(
                     MessageFormat.format(_("Can't wrap {0} in an unqualified Variant ({1})."),
@@ -79,8 +81,8 @@ public class Variant<T> {
             }
             this.sig = ss[0];
         } catch (final DBusException DBe) {
-            if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, DBe);
+            if (AbstractConnection.EXCEPTION_DEBUG) {
+                logger.error("Exception", DBe);
             }
             throw new IllegalArgumentException(MessageFormat.format(
                     _("Can't wrap {0} in an unqualified Variant ({1})."), new Object[] { type, DBe.getMessage() }));
@@ -108,8 +110,8 @@ public class Variant<T> {
             }
             this.type = ts.get(0);
         } catch (final DBusException DBe) {
-            if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, DBe);
+            if (AbstractConnection.EXCEPTION_DEBUG) {
+                logger.error("Exception", DBe);
             }
             throw new IllegalArgumentException(MessageFormat.format(
                     _("Can't wrap {0} in an unqualified Variant ({1})."), new Object[] { sig, DBe.getMessage() }));

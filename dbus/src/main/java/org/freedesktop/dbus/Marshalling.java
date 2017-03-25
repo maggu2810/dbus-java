@@ -32,13 +32,15 @@ import org.freedesktop.dbus.exceptions.DBusException;
 import org.freedesktop.dbus.types.DBusListType;
 import org.freedesktop.dbus.types.DBusMapType;
 import org.freedesktop.dbus.types.DBusStructType;
-
-import cx.ath.matthew.debug.Debug;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Contains static methods for marshalling values.
  */
 public class Marshalling {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Marshalling.class);
+
     private static Map<Type, String[]> typeCache = new HashMap<Type, String[]>();
 
     /**
@@ -173,8 +175,8 @@ public class Marshalling {
                     }
                     out[level].append(s[0]);
                 } catch (final ArrayIndexOutOfBoundsException AIOOBe) {
-                    if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                        Debug.print(Debug.ERR, AIOOBe);
+                    if (AbstractConnection.EXCEPTION_DEBUG) {
+                        LOGGER.error("Exception", AIOOBe);
                     }
                     throw new DBusException(_("Map must have 2 parameters"));
                 }
@@ -298,9 +300,7 @@ public class Marshalling {
             throw new DBusException(_("Exporting non-exportable type ") + c);
         }
 
-        if (Debug.debug) {
-            Debug.print(Debug.VERBOSE, "Converted Java type: " + c + " to D-Bus Type: " + out[level]);
-        }
+        LOGGER.trace("Converted Java type: {} to D-Bus Type: {}", c, out[level]);
 
         return new String[] { out[level].toString() };
     }
@@ -406,8 +406,8 @@ public class Marshalling {
             }
             return i;
         } catch (final IndexOutOfBoundsException IOOBe) {
-            if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, IOOBe);
+            if (AbstractConnection.EXCEPTION_DEBUG) {
+                LOGGER.error("Exception", IOOBe);
             }
             throw new DBusException(_("Failed to parse DBus type signature: ") + dbus);
         }
@@ -428,9 +428,7 @@ public class Marshalling {
             return null;
         }
         for (int i = 0; i < parameters.length; i++) {
-            if (Debug.debug) {
-                Debug.print(Debug.VERBOSE, "Converting " + i + " from " + parameters[i] + " to " + types[i]);
-            }
+            LOGGER.trace("Converting {} from {} to {}", i, parameters[i], types[i]);
             if (null == parameters[i]) {
                 continue;
             }
@@ -466,10 +464,7 @@ public class Marshalling {
                 System.arraycopy(newparams, 0, exparams, i, newparams.length);
                 System.arraycopy(parameters, i + 1, exparams, i + newparams.length, parameters.length - i - 1);
                 parameters = exparams;
-                if (Debug.debug) {
-                    Debug.print(Debug.VERBOSE, "New params: " + Arrays.deepToString(parameters) + " new types: "
-                            + Arrays.deepToString(types));
-                }
+                LOGGER.trace("New params: {} new types: {}", parameters, types);
                 i--;
             } else if (types[i] instanceof TypeVariable && !(parameters[i] instanceof Variant)) {
                 // its an unwrapped variant, wrap it
@@ -484,9 +479,7 @@ public class Marshalling {
     @SuppressWarnings("unchecked")
     static Object deSerializeParameter(Object parameter, final Type type, final AbstractConnection conn)
             throws Exception {
-        if (Debug.debug) {
-            Debug.print(Debug.VERBOSE, "Deserializing from " + parameter.getClass() + " to " + type.getClass());
-        }
+        LOGGER.trace("Deserializing from {} to {}", parameter.getClass(), type.getClass());
         if (null == parameter) {
             return null;
         }
@@ -515,9 +508,7 @@ public class Marshalling {
 
         // it should be a struct. create it
         if (parameter instanceof Object[] && type instanceof Class && Struct.class.isAssignableFrom((Class) type)) {
-            if (Debug.debug) {
-                Debug.print(Debug.VERBOSE, "Creating Struct " + type + " from " + parameter);
-            }
+            LOGGER.trace("Creating Struct {} from {}", type, parameter);
             Type[] ts = Container.getTypeCache(type);
             if (null == ts) {
                 final Field[] fs = ((Class) type).getDeclaredFields();
@@ -603,9 +594,7 @@ public class Marshalling {
             }
         }
         if (parameter instanceof DBusMap) {
-            if (Debug.debug) {
-                Debug.print(Debug.VERBOSE, "Deserializing a Map");
-            }
+            LOGGER.trace("Deserializing a Map");
             final DBusMap dmap = (DBusMap) parameter;
             final Type[] maptypes = ((ParameterizedType) type).getActualTypeArguments();
             for (int i = 0; i < dmap.entries.length; i++) {
@@ -618,9 +607,7 @@ public class Marshalling {
 
     static List<Object> deSerializeParameters(final List<Object> parameters, final Type type,
             final AbstractConnection conn) throws Exception {
-        if (Debug.debug) {
-            Debug.print(Debug.VERBOSE, "Deserializing from " + parameters + " to " + type);
-        }
+        LOGGER.trace("Deserializing from {} to {}", parameters, type);
         if (null == parameters) {
             return null;
         }
@@ -649,7 +636,7 @@ public class Marshalling {
              * newtypes.length);
              * parameters = compress;
              * } catch (ArrayIndexOutOfBoundsException AIOOBe) {
-             * if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) Debug.print(Debug.ERR, AIOOBe);
+             * if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) logger.error( AIOOBe);
              * throw new
              * DBusException("Not enough elements to create custom object from serialized data ("+(parameters.size()-i)
              * +" < "+(newtypes.length)+")");
@@ -665,10 +652,7 @@ public class Marshalling {
     @SuppressWarnings("unchecked")
     static Object[] deSerializeParameters(Object[] parameters, Type[] types, final AbstractConnection conn)
             throws Exception {
-        if (Debug.debug) {
-            Debug.print(Debug.VERBOSE,
-                    "Deserializing from " + Arrays.deepToString(parameters) + " to " + Arrays.deepToString(types));
-        }
+        LOGGER.trace("Deserializing from {} to {}", parameters, types);
         if (null == parameters) {
             return null;
         }
@@ -681,11 +665,8 @@ public class Marshalling {
         for (int i = 0; i < parameters.length; i++) {
             // CHECK IF ARRAYS HAVE THE SAME LENGTH <-- has to happen after expanding parameters
             if (i >= types.length) {
-                if (Debug.debug) {
-                    for (int j = 0; j < parameters.length; j++) {
-                        Debug.print(Debug.ERR, String.format("Error, Parameters difference (%1d, '%2s')", j,
-                                parameters[j].toString()));
-                    }
+                for (int j = 0; j < parameters.length; j++) {
+                    LOGGER.error("Error, Parameters difference ({}, '{}')", j, parameters[j]);
                 }
                 throw new DBusException(
                         _("Error deserializing message: number of parameters didn't match receiving signature"));
@@ -719,8 +700,8 @@ public class Marshalling {
                                     parameters.length - i - newtypes.length);
                             parameters = compress;
                         } catch (final ArrayIndexOutOfBoundsException AIOOBe) {
-                            if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                                Debug.print(Debug.ERR, AIOOBe);
+                            if (AbstractConnection.EXCEPTION_DEBUG) {
+                                LOGGER.error("Exception", AIOOBe);
                             }
                             throw new DBusException(MessageFormat.format(
                                     _("Not enough elements to create custom object from serialized data ({0} < {1})."),

@@ -24,8 +24,8 @@ import java.util.Vector;
 
 import org.freedesktop.DBus;
 import org.freedesktop.dbus.exceptions.DBusException;
-
-import cx.ath.matthew.debug.Debug;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handles a peer to peer connection between two applications withou a bus daemon.
@@ -35,6 +35,9 @@ import cx.ath.matthew.debug.Debug;
  * </p>
  */
 public class DirectConnection extends AbstractConnection {
+    private final Logger logger = LoggerFactory.getLogger(DirectConnection.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DirectConnection.class);
+
     /**
      * Create a direct connection to another application.
      *
@@ -48,13 +51,13 @@ public class DirectConnection extends AbstractConnection {
             transport = new Transport(addr, AbstractConnection.TIMEOUT);
             connected = true;
         } catch (final IOException IOe) {
-            if (EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, IOe);
+            if (EXCEPTION_DEBUG) {
+                logger.error("Exception", IOe);
             }
             throw new DBusException(_("Failed to connect to bus ") + IOe.getMessage());
         } catch (final ParseException Pe) {
-            if (EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, Pe);
+            if (EXCEPTION_DEBUG) {
+                logger.error("Exception", Pe);
             }
             throw new DBusException(_("Failed to connect to bus ") + Pe.getMessage());
         }
@@ -81,9 +84,7 @@ public class DirectConnection extends AbstractConnection {
         }
         address += ",port=" + port;
         address += ",guid=" + Transport.genGUID();
-        if (Debug.debug) {
-            Debug.print("Created Session address: " + address);
-        }
+        LOGGER.info("Created Session address: {}", address);
         return address;
     }
 
@@ -102,15 +103,11 @@ public class DirectConnection extends AbstractConnection {
                 sb.append((char) (Math.abs(r.nextInt()) % 26 + 65));
             }
             path = path.replaceAll("..........$", sb.toString());
-            if (Debug.debug) {
-                Debug.print(Debug.VERBOSE, "Trying path " + path);
-            }
+            LOGGER.trace("Trying path {}", path);
         } while (new File(path).exists());
         address += "abstract=" + path;
         address += ",guid=" + Transport.genGUID();
-        if (Debug.debug) {
-            Debug.print("Created Session address: " + address);
-        }
+        LOGGER.info("Created Session address: {}", address);
         return address;
     }
 
@@ -153,8 +150,8 @@ public class DirectConnection extends AbstractConnection {
             importedObjects.put(newi, ro);
             return newi;
         } catch (final Exception e) {
-            if (EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, e);
+            if (EXCEPTION_DEBUG) {
+                logger.error("Exception", e);
             }
             throw new DBusException(MessageFormat.format(_("Failed to create proxy object for {0}; reason: {1}."),
                     new Object[] { path, e.getMessage() }));

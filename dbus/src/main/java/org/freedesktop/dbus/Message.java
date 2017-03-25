@@ -26,8 +26,9 @@ import java.util.Vector;
 import org.freedesktop.dbus.exceptions.DBusException;
 import org.freedesktop.dbus.exceptions.MarshallingException;
 import org.freedesktop.dbus.exceptions.UnknownTypeCodeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import cx.ath.matthew.debug.Debug;
 import cx.ath.matthew.utils.Hexdump;
 
 /**
@@ -35,6 +36,8 @@ import cx.ath.matthew.utils.Hexdump;
  * This class deals with all the marshalling to/from the wire format.
  */
 public class Message {
+    private final Logger logger = LoggerFactory.getLogger(Message.class);
+
     /** Defines constants representing the endianness of the message. */
     public static interface Endian {
         public static final byte BIG = 'B';
@@ -189,9 +192,7 @@ public class Message {
         synchronized (Message.class) {
             serial = ++globalserial;
         }
-        if (Debug.debug) {
-            Debug.print(Debug.DEBUG, "Creating message with serial " + serial);
-        }
+        logger.debug("Creating message with serial {}", serial);
         this.type = type;
         this.flags = flags;
         preallocate(4);
@@ -228,13 +229,9 @@ public class Message {
         bodylen = ((Number) extract(Message.ArgumentType.UINT32_STRING, msg, 4)[0]).longValue();
         serial = ((Number) extract(Message.ArgumentType.UINT32_STRING, msg, 8)[0]).longValue();
         bytecounter = msg.length + headers.length + body.length;
-        if (Debug.debug) {
-            Debug.print(Debug.VERBOSE, headers);
-        }
+        logger.trace("{}", headers);
         final Object[] hs = extract("a(yv)", headers, 0);
-        if (Debug.debug) {
-            Debug.print(Debug.VERBOSE, Arrays.deepToString(hs));
-        }
+        logger.trace("{}", hs);
         for (final Object o : (Vector<Object>) hs[0]) {
             this.headers.put((Byte) ((Object[]) o)[0], ((Variant<Object>) ((Object[]) o)[1]).getValue());
         }
@@ -263,9 +260,7 @@ public class Message {
             if (increase < BUFFERINCREMENT) {
                 increase = BUFFERINCREMENT;
             }
-            if (Debug.debug) {
-                Debug.print(Debug.VERBOSE, "Resizing " + bufferuse);
-            }
+            logger.trace("Resizing {}", bufferuse);
             final byte[][] temp = new byte[wiredata.length + increase][];
             System.arraycopy(wiredata, 0, temp, 0, wiredata.length);
             wiredata = temp;
@@ -290,9 +285,7 @@ public class Message {
             preallocated -= buf.length;
         } else {
             if (bufferuse == wiredata.length) {
-                if (Debug.debug) {
-                    Debug.print(Debug.VERBOSE, "Resizing " + bufferuse);
-                }
+                logger.trace("Resizing {}", bufferuse);
                 final byte[][] temp = new byte[wiredata.length + BUFFERINCREMENT][];
                 System.arraycopy(wiredata, 0, temp, 0, wiredata.length);
                 wiredata = temp;
@@ -311,9 +304,7 @@ public class Message {
             preallocated--;
         } else {
             if (bufferuse == wiredata.length) {
-                if (Debug.debug) {
-                    Debug.print(Debug.VERBOSE, "Resizing " + bufferuse);
-                }
+                logger.trace("Resizing {}", bufferuse);
                 final byte[][] temp = new byte[wiredata.length + BUFFERINCREMENT][];
                 System.arraycopy(wiredata, 0, temp, 0, wiredata.length);
                 wiredata = temp;
@@ -407,9 +398,7 @@ public class Message {
         } else {
             marshallintLittle(l, buf, ofs, width);
         }
-        if (Debug.debug) {
-            Debug.print(Debug.VERBOSE, "Marshalled int " + l + " to " + Hexdump.toHex(buf, ofs, width));
-        }
+        logger.trace("Marshalled int {}" + l + " to ", l, Hexdump.toHex(buf, ofs, width));
     }
 
     /**
@@ -482,8 +471,8 @@ public class Message {
         try {
             args = getParameters();
         } catch (final DBusException DBe) {
-            if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, DBe);
+            if (AbstractConnection.EXCEPTION_DEBUG) {
+                logger.error("Exception", DBe);
             }
         }
         if (null == args || 0 == args.length) {
@@ -542,12 +531,8 @@ public class Message {
     private int appendone(final byte[] sigb, final int sigofs, final Object data) throws DBusException {
         try {
             int i = sigofs;
-            if (Debug.debug) {
-                Debug.print(Debug.VERBOSE, (Object) bytecounter);
-            }
-            if (Debug.debug) {
-                Debug.print(Debug.VERBOSE, "Appending type: " + (char) sigb[i] + " value: " + data);
-            }
+            logger.trace("{}", bytecounter);
+            logger.trace("Appending type: {} value: {}", (char) sigb[i], data);
 
             // pad to the alignment of this type.
             pad(sigb[i]);
@@ -599,14 +584,12 @@ public class Message {
                     try {
                         payloadbytes = payload.getBytes("UTF-8");
                     } catch (final UnsupportedEncodingException UEe) {
-                        if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                            Debug.print(UEe);
+                        if (AbstractConnection.EXCEPTION_DEBUG) {
+                            logger.error("Exception", UEe);
                         }
                         throw new DBusException(_("System does not support UTF-8 encoding"));
                     }
-                    if (Debug.debug) {
-                        Debug.print(Debug.VERBOSE, "Appending String of length " + payloadbytes.length);
-                    }
+                    logger.trace("Appending String of length {}", payloadbytes.length);
                     appendint(payloadbytes.length, 4);
                     appendBytes(payloadbytes);
                     appendBytes(padding[1]);
@@ -633,10 +616,8 @@ public class Message {
                     // padding to the element alignment, then elements in
                     // order. The length is the length from the end of the
                     // initial padding to the end of the last element.
-                    if (Debug.debug) {
-                        if (data instanceof Object[]) {
-                            Debug.print(Debug.VERBOSE, "Appending array: " + Arrays.deepToString((Object[]) data));
-                        }
+                    if (data instanceof Object[]) {
+                        logger.trace("{}", (Object[]) data);
                     }
 
                     final byte[] alen = new byte[4];
@@ -722,10 +703,7 @@ public class Message {
                         }
                         i = diff;
                     }
-                    if (Debug.debug) {
-                        Debug.print(Debug.VERBOSE,
-                                "start: " + c + " end: " + bytecounter + " length: " + (bytecounter - c));
-                    }
+                    logger.trace("start: {} end: {} length: {}", c, bytecounter, bytecounter - c);
                     marshallint(bytecounter - c, alen, 0, 4);
                     break;
                 case ArgumentType.STRUCT1:
@@ -779,8 +757,8 @@ public class Message {
             }
             return i;
         } catch (final ClassCastException CCe) {
-            if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, CCe);
+            if (AbstractConnection.EXCEPTION_DEBUG) {
+                logger.error("Exception", CCe);
             }
             throw new MarshallingException(
                     MessageFormat.format(_("Trying to marshall to unconvertable type (from {0} to {1})."),
@@ -792,13 +770,9 @@ public class Message {
      * Pad the message to the proper alignment for the given type.
      */
     public void pad(final byte type) {
-        if (Debug.debug) {
-            Debug.print(Debug.VERBOSE, "padding for " + (char) type);
-        }
+        logger.trace("padding for {}", (char) type);
         int a = getAlignment(type);
-        if (Debug.debug) {
-            Debug.print(Debug.VERBOSE, preallocated + " " + paofs + " " + bytecounter + " " + a);
-        }
+        logger.trace("{} {} {} {}", preallocated, paofs, bytecounter, a);
         final int b = (int) ((bytecounter - preallocated) % a);
         if (0 == b) {
             return;
@@ -810,9 +784,7 @@ public class Message {
         } else {
             appendBytes(padding[a]);
         }
-        if (Debug.debug) {
-            Debug.print(Debug.VERBOSE, preallocated + " " + paofs + " " + bytecounter + " " + a);
-        }
+        logger.trace("{} {} {} {}", preallocated, paofs, bytecounter, a);
     }
 
     /**
@@ -860,15 +832,11 @@ public class Message {
      * @param data The value(s).
      */
     public void append(final String sig, final Object... data) throws DBusException {
-        if (Debug.debug) {
-            Debug.print(Debug.DEBUG, "Appending sig: " + sig + " data: " + Arrays.deepToString(data));
-        }
+        logger.debug("Appending sig: {} data: {}", sig, data);
         final byte[] sigb = sig.getBytes();
         int j = 0;
         for (int i = 0; i < sigb.length; i++) {
-            if (Debug.debug) {
-                Debug.print(Debug.VERBOSE, "Appending item: " + i + " " + (char) sigb[i] + " " + j);
-            }
+            logger.trace("Appending item: {} {} {}", i, (char) sigb[i], j);
             i = appendone(sigb, i, data[j++]);
         }
     }
@@ -881,9 +849,7 @@ public class Message {
      * @return The new, aligned, counter.
      */
     public int align(final int current, final byte type) {
-        if (Debug.debug) {
-            Debug.print(Debug.VERBOSE, "aligning to " + (char) type);
-        }
+        logger.trace("aligning to {}", (char) type);
         final int a = getAlignment(type);
         if (0 == current % a) {
             return current;
@@ -904,9 +870,7 @@ public class Message {
      */
     private Object extractone(final byte[] sigb, final byte[] buf, final int[] ofs, final boolean contained)
             throws DBusException {
-        if (Debug.debug) {
-            Debug.print(Debug.VERBOSE, "Extracting type: " + (char) sigb[ofs[0]] + " from offset " + ofs[1]);
-        }
+        logger.trace("Extracting type: {} from offset {}", (char) sigb[ofs[0]], ofs[1]);
         Object rv = null;
         ofs[1] = align(ofs[1], sigb[ofs[0]]);
         switch (sigb[ofs[0]]) {
@@ -965,9 +929,7 @@ public class Message {
                 break;
             case ArgumentType.ARRAY:
                 final long size = demarshallint(buf, ofs[1], 4);
-                if (Debug.debug) {
-                    Debug.print(Debug.VERBOSE, "Reading array of size: " + size);
-                }
+                logger.trace("Reading array of size: {}", size);
                 ofs[1] += 4;
                 final byte algn = (byte) getAlignment(sigb[++ofs[0]]);
                 ofs[1] = align(ofs[1], sigb[ofs[0]]);
@@ -1028,9 +990,7 @@ public class Message {
                             // ofs[0] gets incremented anyway. Leave one character on the stack
                             final int temp4 = Marshalling.getJavaType(temp3, temp, 1) - 1;
                             ofs[0] += temp4;
-                            if (Debug.debug) {
-                                Debug.print(Debug.VERBOSE, "Aligned type: " + temp3 + " " + temp4 + " " + ofs[0]);
-                            }
+                            logger.trace("Aligned type: {} {} {}", temp3, temp4, ofs[0]);
                         }
                         int ofssave = ofs[0];
                         long end = ofs[1] + size;
@@ -1051,9 +1011,7 @@ public class Message {
                             // ofs[0] gets incremented anyway. Leave one character on the stack
                             final int temp4 = Marshalling.getJavaType(temp3, temp, 1) - 1;
                             ofs[0] += temp4;
-                            if (Debug.debug) {
-                                Debug.print(Debug.VERBOSE, "Aligned type: " + temp3 + " " + temp4 + " " + ofs[0]);
-                            }
+                            logger.trace("Aligned type: {} {} {}", temp3, temp4, ofs[0]);
                         }
                         ofssave = ofs[0];
                         end = ofs[1] + size;
@@ -1077,11 +1035,8 @@ public class Message {
                 break;
             case ArgumentType.DICT_ENTRY1:
                 final Object[] decontents = new Object[2];
-                if (Debug.debug) {
-                    Debug.print(Debug.VERBOSE,
-                            "Extracting Dict Entry (" + Hexdump.toAscii(sigb, ofs[0], sigb.length - ofs[0]) + ") from: "
-                                    + Hexdump.toHex(buf, ofs[1], buf.length - ofs[1]));
-                }
+                logger.trace("Extracting Dict Entry ({}) from: {}", Hexdump.toAscii(sigb, ofs[0], sigb.length - ofs[0]),
+                        Hexdump.toHex(buf, ofs[1], buf.length - ofs[1]));
                 ofs[0]++;
                 decontents[0] = extractone(sigb, buf, ofs, true);
                 ofs[0]++;
@@ -1102,8 +1057,8 @@ public class Message {
                 try {
                     rv = new String(buf, ofs[1], length, "UTF-8");
                 } catch (final UnsupportedEncodingException UEe) {
-                    if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                        Debug.print(UEe);
+                    if (AbstractConnection.EXCEPTION_DEBUG) {
+                        logger.error("Exception", UEe);
                     }
                     throw new DBusException(_("System does not support UTF-8 encoding"));
                 }
@@ -1123,14 +1078,7 @@ public class Message {
             default:
                 throw new UnknownTypeCodeException(sigb[ofs[0]]);
         }
-        if (Debug.debug) {
-            if (rv instanceof Object[]) {
-                Debug.print(Debug.VERBOSE,
-                        "Extracted: " + Arrays.deepToString((Object[]) rv) + " (now at " + ofs[1] + ")");
-            } else {
-                Debug.print(Debug.VERBOSE, "Extracted: " + rv + " (now at " + ofs[1] + ")");
-            }
-        }
+        logger.trace("Extracted: {} (now at {})", rv, ofs[1]);
         return rv;
     }
 
@@ -1157,9 +1105,7 @@ public class Message {
      * @return The demarshalled value(s).
      */
     public Object[] extract(final String sig, final byte[] buf, final int[] ofs) throws DBusException {
-        if (Debug.debug) {
-            Debug.print(Debug.VERBOSE, "extract(" + sig + ",#" + buf.length + ", {" + ofs[0] + "," + ofs[1] + "}");
-        }
+        logger.trace("extract({},#{}, \\{{},{}}", sig, buf.length, ofs[0], ofs[1]);
         final Vector<Object> rv = new Vector<Object>();
         final byte[] sigb = sig.getBytes();
         for (final int[] i = ofs; i[0] < sigb.length; i[0]++) {

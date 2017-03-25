@@ -37,10 +37,12 @@ import org.freedesktop.dbus.Variant;
 import org.freedesktop.dbus.exceptions.DBusException;
 import org.freedesktop.dbus.exceptions.DBusExecutionException;
 import org.freedesktop.dbus.types.DBusMapType;
-
-import cx.ath.matthew.debug.Debug;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class cross_test_client implements DBus.Binding.TestClient, DBusSigHandler<DBus.Binding.TestSignals.Triggered> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(cross_test_client.class);
+
     private final DBusConnection conn;
     private static Set<String> passed = new TreeSet<String>();
     private static Map<String, List<String>> failed = new HashMap<String, List<String>>();
@@ -291,9 +293,7 @@ public class cross_test_client implements DBus.Binding.TestClient, DBusSigHandle
             }
 
         } catch (final Exception e) {
-            if (Debug.debug) {
-                Debug.print(e);
-            }
+            LOGGER.error("Exception", e);
             fail("org.freedesktop.DBus.Binding.Tests.Primitize",
                     "Exception occurred during test: (" + e.getClass().getName() + ") " + e.getMessage());
         }
@@ -314,9 +314,7 @@ public class cross_test_client implements DBus.Binding.TestClient, DBusSigHandle
                         "Didn't get valid xml data back when introspecting /Test");
             }
         } catch (final DBusExecutionException DBEe) {
-            if (Debug.debug) {
-                Debug.print(DBEe);
-            }
+            LOGGER.error("Exception", DBEe);
             fail("org.freedesktop.DBus.Introspectable.Introspect", "Got exception during introspection on /Test ("
                     + DBEe.getClass().getName() + "): " + DBEe.getMessage());
         }
@@ -329,9 +327,7 @@ public class cross_test_client implements DBus.Binding.TestClient, DBusSigHandle
                         "Didn't get valid xml data back when introspecting /");
             }
         } catch (final DBusExecutionException DBEe) {
-            if (Debug.debug) {
-                Debug.print(DBEe);
-            }
+            LOGGER.error("Exception", DBEe);
             fail("org.freedesktop.DBus.Introspectable.Introspect", "Got exception during introspection on / ("
                     + DBEe.getClass().getName() + "): " + DBEe.getMessage());
         }
@@ -498,9 +494,7 @@ public class cross_test_client implements DBus.Binding.TestClient, DBusSigHandle
         try {
             ctc.conn.sendSignal(new DBus.Binding.TestClient.Trigger("/Test", new UInt16(15), 12.5));
         } catch (final DBusException DBe) {
-            if (Debug.debug) {
-                Debug.print(DBe);
-            }
+            LOGGER.error("Exception", DBe);
             throw new DBusExecutionException(DBe.getMessage());
         }
 

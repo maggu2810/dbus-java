@@ -15,11 +15,15 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import cx.ath.matthew.debug.Debug;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cx.ath.matthew.unix.USOutputStream;
 import cx.ath.matthew.utils.Hexdump;
 
 public class MessageWriter {
+    private final Logger logger = LoggerFactory.getLogger(MessageWriter.class);
+
     private OutputStream out;
     private boolean isunix;
 
@@ -38,32 +42,25 @@ public class MessageWriter {
     }
 
     public void writeMessage(final Message m) throws IOException {
-        if (Debug.debug) {
-            Debug.print(Debug.INFO, "<= " + m);
-        }
+        logger.info("<= ", m);
         if (null == m) {
             return;
         }
         if (null == m.getWireData()) {
-            if (Debug.debug) {
-                Debug.print(Debug.WARN, "Message " + m + " wire-data was null!");
-            }
+            logger.warn("Message {} wire-data was null!", m);
             return;
         }
         if (isunix) {
-            if (Debug.debug) {
-                Debug.print(Debug.DEBUG,
-                        "Writing all " + m.getWireData().length + " buffers simultaneously to Unix Socket");
+            logger.debug("Writing all {} buffers simultaneously to Unix Socket", m.getWireData().length);
+            if (logger.isTraceEnabled()) {
                 for (final byte[] buf : m.getWireData()) {
-                    Debug.print(Debug.VERBOSE, "(" + buf + "):" + (null == buf ? "" : Hexdump.format(buf)));
+                    logger.trace("({}): {}", buf, Hexdump.format(buf));
                 }
             }
             ((USOutputStream) out).write(m.getWireData());
         } else {
             for (final byte[] buf : m.getWireData()) {
-                if (Debug.debug) {
-                    Debug.print(Debug.VERBOSE, "(" + buf + "):" + (null == buf ? "" : Hexdump.format(buf)));
-                }
+                logger.trace("({}): {}", buf, Hexdump.format(buf));
                 if (null == buf) {
                     break;
                 }
@@ -74,9 +71,7 @@ public class MessageWriter {
     }
 
     public void close() throws IOException {
-        if (Debug.debug) {
-            Debug.print(Debug.INFO, "Closing Message Writer");
-        }
+        logger.info("Closing Message Writer");
         out.close();
     }
 }

@@ -11,9 +11,12 @@
 
 package org.freedesktop.dbus;
 
-import cx.ath.matthew.debug.Debug;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class MethodTuple {
+    private final Logger logger = LoggerFactory.getLogger(MethodTuple.class);
+
     String name;
     String sig;
 
@@ -24,9 +27,7 @@ class MethodTuple {
         } else {
             this.sig = "";
         }
-        if (Debug.debug) {
-            Debug.print(Debug.VERBOSE, "new MethodTuple(" + this.name + ", " + this.sig + ")");
-        }
+        logger.trace("new MethodTuple({}, {})", this.name, this.sig);
     }
 
     @Override

@@ -23,11 +23,14 @@ import java.text.MessageFormat;
 import org.freedesktop.dbus.exceptions.DBusException;
 import org.freedesktop.dbus.exceptions.MessageProtocolVersionException;
 import org.freedesktop.dbus.exceptions.MessageTypeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import cx.ath.matthew.debug.Debug;
 import cx.ath.matthew.utils.Hexdump;
 
 public class MessageReader {
+    private final Logger logger = LoggerFactory.getLogger(MessageReader.class);
+
     private final InputStream in;
     private byte[] buf = null;
     private byte[] tbuf = null;
@@ -61,9 +64,7 @@ public class MessageReader {
             return null;
         }
         if (len[0] < 12) {
-            if (Debug.debug) {
-                Debug.print(Debug.DEBUG, "Only got " + len[0] + " of 12 bytes of header");
-            }
+            logger.debug("Only got {} of 12 bytes of header", len[0]);
             return null;
         }
 
@@ -94,9 +95,7 @@ public class MessageReader {
             len[1] += rv;
         }
         if (len[1] < 4) {
-            if (Debug.debug) {
-                Debug.print(Debug.DEBUG, "Only got " + len[1] + " of 4 bytes of header");
-            }
+            logger.debug("Only got {} of 4 bytes of header", len[1]);
             return null;
         }
 
@@ -129,9 +128,7 @@ public class MessageReader {
             len[2] += rv;
         }
         if (len[2] < headerlen) {
-            if (Debug.debug) {
-                Debug.print(Debug.DEBUG, "Only got " + len[2] + " of " + headerlen + " bytes of header");
-            }
+            logger.debug("Only got {} of {} bytes of header", len[2], headerlen);
             return null;
         }
 
@@ -156,9 +153,7 @@ public class MessageReader {
             len[3] += rv;
         }
         if (len[3] < body.length) {
-            if (Debug.debug) {
-                Debug.print(Debug.DEBUG, "Only got " + len[3] + " of " + body.length + " bytes of body");
-            }
+            logger.debug("Only got {} of {} bytes of body", len[3], body.length);
             return null;
         }
 
@@ -180,17 +175,17 @@ public class MessageReader {
                 throw new MessageTypeException(
                         MessageFormat.format(_("Message type {0} unsupported"), new Object[] { type }));
         }
-        if (Debug.debug) {
-            Debug.print(Debug.VERBOSE, Hexdump.format(buf));
-            Debug.print(Debug.VERBOSE, Hexdump.format(tbuf));
-            Debug.print(Debug.VERBOSE, Hexdump.format(header));
-            Debug.print(Debug.VERBOSE, Hexdump.format(body));
+        if (logger.isTraceEnabled()) {
+            logger.trace("{}", Hexdump.format(buf));
+            logger.trace("{}", Hexdump.format(tbuf));
+            logger.trace("{}", Hexdump.format(header));
+            logger.trace("{}", Hexdump.format(body));
         }
         try {
             m.populate(buf, header, body);
         } catch (final DBusException DBe) {
-            if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, DBe);
+            if (AbstractConnection.EXCEPTION_DEBUG) {
+                logger.error("Exception", DBe);
             }
             buf = null;
             tbuf = null;
@@ -198,8 +193,8 @@ public class MessageReader {
             header = null;
             throw DBe;
         } catch (final RuntimeException Re) {
-            if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, Re);
+            if (AbstractConnection.EXCEPTION_DEBUG) {
+                logger.error("Exception", Re);
             }
             buf = null;
             tbuf = null;
@@ -207,9 +202,7 @@ public class MessageReader {
             header = null;
             throw Re;
         }
-        if (Debug.debug) {
-            Debug.print(Debug.INFO, "=> " + m);
-        }
+        logger.info("=> {}", m);
         buf = null;
         tbuf = null;
         body = null;
@@ -218,9 +211,7 @@ public class MessageReader {
     }
 
     public void close() throws IOException {
-        if (Debug.debug) {
-            Debug.print(Debug.INFO, "Closing Message Reader");
-        }
+        logger.info("Closing Message Reader");
         in.close();
     }
 }

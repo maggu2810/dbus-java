@@ -43,10 +43,10 @@
       <id>bintray</id>
       <url>https://api.bintray.com/maven/maggu2810/maven/dbus-java</url>
     </repository>
-    <!--<snapshotRepository>-->
-    <!--<id>bintray</id>-->
-    <!--<url>https://oss.jfrog.org/artifactory/simple/oss-snapshot-local/</url>-->
-    <!--</snapshotRepository>-->
+    <!--<snapshotRepository> -->
+    <!--<id>bintray</id> -->
+    <!--<url>https://oss.jfrog.org/artifactory/simple/oss-snapshot-local/</url> -->
+    <!--</snapshotRepository> -->
   </distributionManagement>
 
   <dependencyManagement>
@@ -54,7 +54,17 @@
       <dependency>
         <groupId>de.maggu2810.libmatthew</groupId>
         <artifactId>unix</artifactId>
-        <version>0.5.0</version>
+        <version>0.5.1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>de.maggu2810.libmatthew</groupId>
+        <artifactId>hexdump</artifactId>
+        <version>0.2.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.7</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

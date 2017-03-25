@@ -13,12 +13,15 @@ package org.freedesktop.dbus;
 
 import java.util.regex.Pattern;
 
-import cx.ath.matthew.debug.Debug;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Keeps track of the exported objects for introspection data
  */
 class ObjectTree {
+    private final Logger logger = LoggerFactory.getLogger(ObjectTree.class);
+
     class TreeNode {
         String name;
         ExportedObject object;
@@ -114,16 +117,12 @@ class ObjectTree {
     }
 
     public void add(final String path, final ExportedObject object, final String data) {
-        if (Debug.debug) {
-            Debug.print(Debug.DEBUG, "Adding " + path + " to object tree");
-        }
+        logger.debug("Adding {} to object tree", path);
         root = recursiveAdd(root, path, object, data);
     }
 
     public void remove(final String path) {
-        if (Debug.debug) {
-            Debug.print(Debug.DEBUG, "Removing " + path + " from object tree");
-        }
+        logger.debug("Removing {} from object tree", path);
         final TreeNode t = recursiveFind(root, path);
         t.object = null;
         t.data = null;

@@ -20,9 +20,12 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
-import cx.ath.matthew.debug.Debug;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class ArrayFrob {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArrayFrob.class);
+
     static Hashtable<Class<? extends Object>, Class<? extends Object>> primitiveToWrapper = new Hashtable<Class<? extends Object>, Class<? extends Object>>();
     static Hashtable<Class<? extends Object>, Class<? extends Object>> wrapperToPrimitive = new Hashtable<Class<? extends Object>, Class<? extends Object>>();
     static {
@@ -168,8 +171,8 @@ class ArrayFrob {
             }
 
         } catch (final Exception e) {
-            if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, e);
+            if (AbstractConnection.EXCEPTION_DEBUG) {
+                LOGGER.error("Exception", e);
             }
             throw new IllegalArgumentException(e);
         }

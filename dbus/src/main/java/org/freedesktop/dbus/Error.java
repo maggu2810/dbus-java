@@ -20,13 +20,15 @@ import org.freedesktop.dbus.exceptions.DBusException;
 import org.freedesktop.dbus.exceptions.DBusExecutionException;
 import org.freedesktop.dbus.exceptions.MessageFormatException;
 import org.freedesktop.dbus.exceptions.NotConnected;
-
-import cx.ath.matthew.debug.Debug;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Error messages which can be sent over the bus.
  */
 public class Error extends Message {
+    private final Logger logger = LoggerFactory.getLogger(Error.class);
+
     Error() {
     }
 
@@ -131,11 +133,11 @@ public class Error extends Message {
             ex.setType(getName());
             return ex;
         } catch (final Exception e) {
-            if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug) {
-                Debug.print(Debug.ERR, e);
+            if (AbstractConnection.EXCEPTION_DEBUG) {
+                logger.error("Exception", e);
             }
-            if (AbstractConnection.EXCEPTION_DEBUG && Debug.debug && null != e.getCause()) {
-                Debug.print(Debug.ERR, e.getCause());
+            if (AbstractConnection.EXCEPTION_DEBUG && null != e.getCause()) {
+                logger.error("Exception", e.getCause());
             }
             DBusExecutionException ex;
             Object[] args = null;

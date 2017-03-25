@@ -11,7 +11,6 @@
 
 package org.freedesktop.dbus.bin;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -24,16 +23,10 @@ import org.freedesktop.dbus.Message;
 import org.freedesktop.dbus.MethodCall;
 import org.freedesktop.dbus.Transport;
 
-import cx.ath.matthew.debug.Debug;
-
 public class Caller {
     @SuppressWarnings("unchecked")
     public static void main(final String[] args) {
         try {
-            if (Debug.debug) {
-                Debug.setHexDump(true);
-                Debug.loadConfig(new File("debug.conf"));
-            }
             if (args.length < 4) {
                 System.out.println("Syntax: Caller <dest> <path> <interface> <method> [<sig> <args>]");
                 System.exit(1);
