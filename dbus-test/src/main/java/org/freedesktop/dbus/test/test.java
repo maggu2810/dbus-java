@@ -962,7 +962,7 @@ public class test {
             System.out.println("done");
 
             System.out.print("testing complex variants...");
-            final Map m = new HashMap();
+            final Map<String, String> m = new HashMap<>();
             m.put("cow", "moo");
             tri2.complexv(new Variant<>(m, "a{ss}"));
             System.out.println("done");
