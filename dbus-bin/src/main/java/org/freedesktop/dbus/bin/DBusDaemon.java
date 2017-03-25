@@ -679,7 +679,7 @@ public class DBusDaemon extends Thread {
     private final MagicMap<Message, WeakReference<Connstruct>> localqueue = new MagicMap<Message, WeakReference<Connstruct>>(
             "local");
     private final List<Connstruct> sigrecips = new Vector<Connstruct>();
-    private final boolean _run = true;
+    private boolean _run = true;
     private int next_unique = 0;
     private final Object unique_lock = new Object();
     DBusServer dbus_server = new DBusServer();
@@ -690,6 +690,13 @@ public class DBusDaemon extends Thread {
         synchronized (names) {
             names.put("org.freedesktop.DBus", null);
         }
+    }
+
+    /*
+     * Added temporary to fix "unreachable" code because the compiler "knows" that _run is never set to false.
+     */
+    void _stopRunning() {
+        _run = false;
     }
 
     @SuppressWarnings("unchecked")
