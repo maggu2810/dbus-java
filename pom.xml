@@ -27,6 +27,29 @@
     </license>
   </licenses>
 
+  <scm>
+    <connection>scm:git:https://github.com/maggu2810/dbus-java.git</connection>
+    <developerConnection>scm:git:git@github.com:maggu2810/dbus-java.git</developerConnection>
+    <url>https://github.com/maggu2810/dbus-java</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <issueManagement>
+    <url>https://github.com/maggu2810/dbus-java/issues</url>
+    <system>Github</system>
+  </issueManagement>
+
+  <distributionManagement>
+    <repository>
+      <id>bintray</id>
+      <url>https://api.bintray.com/maven/maggu2810/maven/dbus-java</url>
+    </repository>
+    <!--<snapshotRepository>-->
+    <!--<id>bintray</id>-->
+    <!--<url>https://oss.jfrog.org/artifactory/simple/oss-snapshot-local/</url>-->
+    <!--</snapshotRepository>-->
+  </distributionManagement>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
