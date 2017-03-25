@@ -510,14 +510,13 @@ public class Transport {
          * Types is a bitmask of the available auth types.
          * Returns true if the auth was successful and false if it failed.
          */
-        @SuppressWarnings("unchecked")
         public boolean auth(final int mode, final int types, final String guid, final OutputStream out,
                 final InputStream in, final UnixSocket us) throws IOException {
             final String username = System.getProperty("user.name");
             String Uid = null;
             String kernelUid = null;
             try {
-                final Class c = Class.forName("com.sun.security.auth.module.UnixSystem");
+                final Class<?> c = Class.forName("com.sun.security.auth.module.UnixSystem");
                 final Method m = c.getMethod("getUid");
                 final Object o = c.newInstance();
                 final long uid = (Long) m.invoke(o);

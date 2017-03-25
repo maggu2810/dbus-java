@@ -489,8 +489,8 @@ public class Marshalling {
         }
 
         // Turn a signature into a Type[]
-        if (type instanceof Class && ((Class) type).isArray() && ((Class) type).getComponentType().equals(Type.class)
-                && parameter instanceof String) {
+        if (type instanceof Class && ((Class<?>) type).isArray()
+                && ((Class<?>) type).getComponentType().equals(Type.class) && parameter instanceof String) {
             final Vector<Type> rv = new Vector<>();
             getJavaType((String) parameter, rv, -1);
             parameter = rv.toArray(new Type[0]);
@@ -498,7 +498,7 @@ public class Marshalling {
 
         // its an object path, get/create the proxy
         if (parameter instanceof ObjectPath) {
-            if (type instanceof Class && DBusInterface.class.isAssignableFrom((Class) type)) {
+            if (type instanceof Class && DBusInterface.class.isAssignableFrom((Class<?>) type)) {
                 parameter = conn.getExportedObject(((ObjectPath) parameter).source, ((ObjectPath) parameter).path);
             } else {
                 parameter = new Path(((ObjectPath) parameter).path);
@@ -506,11 +506,11 @@ public class Marshalling {
         }
 
         // it should be a struct. create it
-        if (parameter instanceof Object[] && type instanceof Class && Struct.class.isAssignableFrom((Class) type)) {
+        if (parameter instanceof Object[] && type instanceof Class && Struct.class.isAssignableFrom((Class<?>) type)) {
             LOGGER.trace("Creating Struct {} from {}", type, parameter);
             Type[] ts = Container.getTypeCache(type);
             if (null == ts) {
-                final Field[] fs = ((Class) type).getDeclaredFields();
+                final Field[] fs = ((Class<?>) type).getDeclaredFields();
                 ts = new Type[fs.length];
                 for (final Field f : fs) {
                     final Position p = f.getAnnotation(Position.class);
@@ -524,7 +524,7 @@ public class Marshalling {
 
             // recurse over struct contents
             parameter = deSerializeParameters((Object[]) parameter, ts, conn);
-            for (final Constructor con : ((Class) type).getDeclaredConstructors()) {
+            for (final Constructor con : ((Class<?>) type).getDeclaredConstructors()) {
                 try {
                     parameter = con.newInstance((Object[]) parameter);
                     break;
@@ -545,8 +545,8 @@ public class Marshalling {
                 type2 = ((ParameterizedType) type).getActualTypeArguments()[0];
             } else if (type instanceof GenericArrayType) {
                 type2 = ((GenericArrayType) type).getGenericComponentType();
-            } else if (type instanceof Class && ((Class) type).isArray()) {
-                type2 = ((Class) type).getComponentType();
+            } else if (type instanceof Class && ((Class<?>) type).isArray()) {
+                type2 = ((Class<?>) type).getComponentType();
             } else {
                 type2 = null;
             }
@@ -569,17 +569,17 @@ public class Marshalling {
                         (Class<? extends Object>) ((ParameterizedType) type).getRawType());
             } else if (type instanceof GenericArrayType) {
                 final Type ct = ((GenericArrayType) type).getGenericComponentType();
-                Class cc = null;
+                Class<?> cc = null;
                 if (ct instanceof Class) {
-                    cc = (Class) ct;
+                    cc = (Class<?>) ct;
                 }
                 if (ct instanceof ParameterizedType) {
-                    cc = (Class) ((ParameterizedType) ct).getRawType();
+                    cc = (Class<?>) ((ParameterizedType) ct).getRawType();
                 }
                 final Object o = Array.newInstance(cc, 0);
                 parameter = ArrayFrob.convert(parameter, o.getClass());
-            } else if (type instanceof Class && ((Class) type).isArray()) {
-                final Class cc = ((Class) type).getComponentType();
+            } else if (type instanceof Class && ((Class<?>) type).isArray()) {
+                final Class<?> cc = ((Class<?>) type).getComponentType();
                 if ((cc.equals(Float.class) || cc.equals(Float.TYPE)) && parameter instanceof double[]) {
                     final double[] tmp1 = (double[]) parameter;
                     final float[] tmp2 = new float[tmp1.length];
@@ -657,7 +657,7 @@ public class Marshalling {
         }
 
         if (types.length == 1 && types[0] instanceof ParameterizedType
-                && Tuple.class.isAssignableFrom((Class) ((ParameterizedType) types[0]).getRawType())) {
+                && Tuple.class.isAssignableFrom((Class<?>) ((ParameterizedType) types[0]).getRawType())) {
             types = ((ParameterizedType) types[0]).getActualTypeArguments();
         }
 

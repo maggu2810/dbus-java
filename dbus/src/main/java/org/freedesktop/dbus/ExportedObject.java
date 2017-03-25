@@ -30,11 +30,10 @@ import org.freedesktop.dbus.exceptions.DBusException;
 import org.freedesktop.dbus.exceptions.DBusExecutionException;
 
 class ExportedObject {
-    @SuppressWarnings("unchecked")
     private String getAnnotations(final AnnotatedElement c) {
         String ans = "";
         for (final Annotation a : c.getDeclaredAnnotations()) {
-            final Class t = a.annotationType();
+            final Class<? extends Annotation> t = a.annotationType();
             String value = "";
             try {
                 final Method m = t.getMethod("value");
@@ -50,17 +49,16 @@ class ExportedObject {
         return ans;
     }
 
-    @SuppressWarnings("unchecked")
-    private Map<MethodTuple, Method> getExportedMethods(final Class c) throws DBusException {
+    private Map<MethodTuple, Method> getExportedMethods(final Class<?> c) throws DBusException {
         if (DBusInterface.class.equals(c)) {
             return new HashMap<>();
         }
         final Map<MethodTuple, Method> m = new HashMap<>();
-        for (final Class i : c.getInterfaces()) {
+        for (final Class<?> i : c.getInterfaces()) {
             if (DBusInterface.class.equals(i)) {
                 // add this class's public methods
                 if (null != c.getAnnotation(DBusInterfaceName.class)) {
-                    final String name = ((DBusInterfaceName) c.getAnnotation(DBusInterfaceName.class)).value();
+                    final String name = c.getAnnotation(DBusInterfaceName.class).value();
                     introspectiondata += " <interface name=\"" + name + "\">\n";
                     DBusSignal.addInterfaceMap(c.getName(), name);
                 } else {
@@ -95,7 +93,7 @@ class ExportedObject {
                         }
                         introspectiondata += "  <method name=\"" + name + "\" >\n";
                         introspectiondata += getAnnotations(meth);
-                        for (final Class ex : meth.getExceptionTypes()) {
+                        for (final Class<?> ex : meth.getExceptionTypes()) {
                             if (DBusExecutionException.class.isAssignableFrom(ex)) {
                                 introspectiondata += "   <annotation name=\"org.freedesktop.DBus.Method.Error\" value=\""
                                         + AbstractConnection.dollar_pattern.matcher(ex.getName()).replaceAll(".")
@@ -133,11 +131,11 @@ class ExportedObject {
                         m.put(new MethodTuple(name, ms), meth);
                     }
                 }
-                for (final Class sig : c.getDeclaredClasses()) {
+                for (final Class<?> sig : c.getDeclaredClasses()) {
                     if (DBusSignal.class.isAssignableFrom(sig)) {
                         String name;
                         if (sig.isAnnotationPresent(DBusMemberName.class)) {
-                            name = ((DBusMemberName) sig.getAnnotation(DBusMemberName.class)).value();
+                            name = sig.getAnnotation(DBusMemberName.class).value();
                             DBusSignal.addSignalMap(sig.getSimpleName(), name);
                         } else {
                             name = sig.getSimpleName();
@@ -148,7 +146,7 @@ class ExportedObject {
                                     + name);
                         }
                         introspectiondata += "  <signal name=\"" + name + "\">\n";
-                        final Constructor con = sig.getConstructors()[0];
+                        final Constructor<?> con = sig.getConstructors()[0];
                         final Type[] ts = con.getGenericParameterTypes();
                         for (int j = 1; j < ts.length; j++) {
                             for (final String s : Marshalling.getDBusType(ts[j])) {

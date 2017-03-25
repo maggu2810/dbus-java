@@ -377,7 +377,6 @@ public class DBusConnection extends AbstractConnection {
         }
     }
 
-    @SuppressWarnings("unchecked")
     DBusInterface dynamicProxy(final String source, final String path) throws DBusException {
         logger.info("Introspecting {} on {} for dynamic proxy creation", path, source);
         try {
@@ -397,7 +396,7 @@ public class DBusConnection extends AbstractConnection {
                 int j = 0;
                 while (j >= 0) {
                     try {
-                        final Class ifclass = Class.forName(iface);
+                        final Class<?> ifclass = Class.forName(iface);
                         if (!ifcs.contains(ifclass)) {
                             ifcs.add(ifclass);
                         }

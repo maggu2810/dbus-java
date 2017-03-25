@@ -701,7 +701,7 @@ public abstract class AbstractConnection {
     public <A> void callWithCallback(final DBusInterface object, final String m, final CallbackHandler<A> callback,
             final Object... parameters) {
         logger.trace("callWithCallback({}, {}, {},...)", object, m, callback);
-        final Class[] types = new Class[parameters.length];
+        final Class<?>[] types = new Class[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
             types[i] = parameters[i].getClass();
         }

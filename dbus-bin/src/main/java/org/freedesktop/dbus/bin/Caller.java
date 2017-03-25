@@ -24,7 +24,6 @@ import org.freedesktop.dbus.MethodCall;
 import org.freedesktop.dbus.Transport;
 
 public class Caller {
-    @SuppressWarnings("unchecked")
     public static void main(final String[] args) {
         try {
             if (args.length < 4) {
@@ -53,7 +52,7 @@ public class Caller {
                 for (int i = 5; i < args.length; i++) {
                     if (ts[i - 5] instanceof Class) {
                         try {
-                            final Constructor c = ((Class) ts[i - 5]).getConstructor(String.class);
+                            final Constructor<?> c = ((Class<?>) ts[i - 5]).getConstructor(String.class);
                             os[i - 5] = c.newInstance(args[i]);
                         } catch (final Exception e) {
                             os[i - 5] = args[i];
