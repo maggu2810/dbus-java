@@ -672,7 +672,7 @@ public class Message {
                         }
                         appendBytes(primbuf);
                     } else if (data instanceof List) {
-                        final Object[] contents = ((List) data).toArray();
+                        final Object[] contents = ((List<Object>) data).toArray();
                         int diff = i;
                         ensureBuffers(contents.length * 4);
                         for (final Object o : contents) {
