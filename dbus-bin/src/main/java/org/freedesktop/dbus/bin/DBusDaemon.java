@@ -11,7 +11,7 @@
 
 package org.freedesktop.dbus.bin;
 
-import static org.freedesktop.dbus.Gettext._;
+import static org.freedesktop.dbus.Gettext.localize;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -152,7 +152,7 @@ public class DBusDaemon extends Thread {
             LOGGER.debug("enter");
             synchronized (c) {
                 if (null != c.unique) {
-                    throw new org.freedesktop.DBus.Error.AccessDenied(_("Connection has already sent a Hello message"));
+                    throw new org.freedesktop.DBus.Error.AccessDenied(localize("Connection has already sent a Hello message"));
                 }
                 synchronized (unique_lock) {
                     c.unique = ":1." + (++next_unique);
@@ -381,12 +381,12 @@ public class DBusDaemon extends Thread {
                     }
                     send(c, new org.freedesktop.dbus.Error("org.freedesktop.DBus", c.unique,
                             "org.freedesktop.DBus.Error.GeneralError", m.getSerial(), "s",
-                            _("An error occurred while calling ") + m.getName()));
+                            localize("An error occurred while calling ") + m.getName()));
                 }
             } catch (final NoSuchMethodException NSMe) {
                 send(c, new org.freedesktop.dbus.Error("org.freedesktop.DBus", c.unique,
                         "org.freedesktop.DBus.Error.UnknownMethod", m.getSerial(), "s",
-                        _("This service does not support ") + m.getName()));
+                        localize("This service does not support ") + m.getName()));
             }
 
             LOGGER.debug("exit");
@@ -682,7 +682,7 @@ public class DBusDaemon extends Thread {
                                             || !"Hello".equals(m.getName()))) {
                                 send(c, new Error("org.freedesktop.DBus", null,
                                         "org.freedesktop.DBus.Error.AccessDenied", m.getSerial(), "s",
-                                        _("You must send a Hello message")));
+                                        localize("You must send a Hello message")));
                             } else {
                                 try {
                                     if (null != c.unique) {
@@ -694,7 +694,7 @@ public class DBusDaemon extends Thread {
                                     }
                                     send(c, new Error("org.freedesktop.DBus", null,
                                             "org.freedesktop.DBus.Error.GeneralError", m.getSerial(), "s",
-                                            _("Sending message failed")));
+                                            localize("Sending message failed")));
                                 }
 
                                 if ("org.freedesktop.DBus".equals(m.getDestination())) {
@@ -714,7 +714,7 @@ public class DBusDaemon extends Thread {
                                         if (null == dest) {
                                             send(c, new Error("org.freedesktop.DBus", null,
                                                     "org.freedesktop.DBus.Error.ServiceUnknown", m.getSerial(), "s",
-                                                    MessageFormat.format(_("The name `{0}' does not exist"),
+                                                    MessageFormat.format(localize("The name `{0}' does not exist"),
                                                             new Object[] { m.getDestination() })));
                                         } else {
                                             send(dest, m);

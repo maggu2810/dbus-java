@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
 public class Gettext {
     private static ResourceBundle myResources = ResourceBundle.getBundle("dbusjava_localized");
 
-    public static String _(final String s) {
+    public static String localize(final String s) {
         return myResources.getString(s);
     }
 }

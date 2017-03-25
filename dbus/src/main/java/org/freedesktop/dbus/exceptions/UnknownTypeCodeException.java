@@ -11,11 +11,11 @@
 
 package org.freedesktop.dbus.exceptions;
 
-import static org.freedesktop.dbus.Gettext._;
+import static org.freedesktop.dbus.Gettext.localize;
 
 @SuppressWarnings("serial")
 public class UnknownTypeCodeException extends DBusException implements NonFatalException {
     public UnknownTypeCodeException(final byte code) {
-        super(_("Not a valid D-Bus type code: ") + code);
+        super(localize("Not a valid D-Bus type code: ") + code);
     }
 }

@@ -11,7 +11,7 @@
 
 package org.freedesktop.dbus;
 
-import static org.freedesktop.dbus.Gettext._;
+import static org.freedesktop.dbus.Gettext.localize;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -100,7 +100,7 @@ public class Transport {
                     command = COMMAND_ERROR;
                     data = ss[1];
                 } else {
-                    throw new IOException(_("Invalid Command ") + ss[0]);
+                    throw new IOException(localize("Invalid Command ") + ss[0]);
                 }
                 logger.trace("Created command: {}", this);
             }
@@ -855,12 +855,12 @@ public class Transport {
             in = s.getInputStream();
             out = s.getOutputStream();
         } else {
-            throw new IOException(_("unknown address type ") + address.getType());
+            throw new IOException(localize("unknown address type ") + address.getType());
         }
 
         if (!new SASL().auth(mode, types, address.getParameter("guid"), out, in, us)) {
             out.close();
-            throw new IOException(_("Failed to auth"));
+            throw new IOException(localize("Failed to auth"));
         }
         if (null != us) {
             logger.trace("Setting timeout to {} on Socket", timeout);

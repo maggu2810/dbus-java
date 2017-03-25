@@ -11,7 +11,7 @@
 
 package org.freedesktop.dbus;
 
-import static org.freedesktop.dbus.Gettext._;
+import static org.freedesktop.dbus.Gettext.localize;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -418,14 +418,14 @@ public abstract class AbstractConnection {
      */
     public void exportObject(final String objectpath, final DBusInterface object) throws DBusException {
         if (null == objectpath || "".equals(objectpath)) {
-            throw new DBusException(_("Must Specify an Object Path"));
+            throw new DBusException(localize("Must Specify an Object Path"));
         }
         if (!objectpath.matches(OBJECT_REGEX) || objectpath.length() > MAX_NAME_LENGTH) {
-            throw new DBusException(_("Invalid object path: ") + objectpath);
+            throw new DBusException(localize("Invalid object path: ") + objectpath);
         }
         synchronized (exportedObjects) {
             if (null != exportedObjects.get(objectpath)) {
-                throw new DBusException(_("Object already exported"));
+                throw new DBusException(localize("Object already exported"));
             }
             final ExportedObject eo = new ExportedObject(object, weakreferences);
             exportedObjects.put(objectpath, eo);
@@ -445,10 +445,10 @@ public abstract class AbstractConnection {
      */
     public void addFallback(final String objectprefix, final DBusInterface object) throws DBusException {
         if (null == objectprefix || "".equals(objectprefix)) {
-            throw new DBusException(_("Must Specify an Object Path"));
+            throw new DBusException(localize("Must Specify an Object Path"));
         }
         if (!objectprefix.matches(OBJECT_REGEX) || objectprefix.length() > MAX_NAME_LENGTH) {
-            throw new DBusException(_("Invalid object path: ") + objectprefix);
+            throw new DBusException(localize("Invalid object path: ") + objectprefix);
         }
         final ExportedObject eo = new ExportedObject(object, weakreferences);
         fallbackcontainer.add(objectprefix, eo);
@@ -523,7 +523,7 @@ public abstract class AbstractConnection {
     public <T extends DBusSignal> void removeSigHandler(final Class<T> type, final DBusSigHandler<T> handler)
             throws DBusException {
         if (!DBusSignal.class.isAssignableFrom(type)) {
-            throw new ClassCastException(_("Not A DBus Signal"));
+            throw new ClassCastException(localize("Not A DBus Signal"));
         }
         removeSigHandler(new DBusMatchRule(type), handler);
     }
@@ -540,11 +540,11 @@ public abstract class AbstractConnection {
     public <T extends DBusSignal> void removeSigHandler(final Class<T> type, final DBusInterface object,
             final DBusSigHandler<T> handler) throws DBusException {
         if (!DBusSignal.class.isAssignableFrom(type)) {
-            throw new ClassCastException(_("Not A DBus Signal"));
+            throw new ClassCastException(localize("Not A DBus Signal"));
         }
         final String objectpath = importedObjects.get(object).objectpath;
         if (!objectpath.matches(OBJECT_REGEX) || objectpath.length() > MAX_NAME_LENGTH) {
-            throw new DBusException(_("Invalid object path: ") + objectpath);
+            throw new DBusException(localize("Invalid object path: ") + objectpath);
         }
         removeSigHandler(new DBusMatchRule(type, null, objectpath), handler);
     }
@@ -565,7 +565,7 @@ public abstract class AbstractConnection {
     public <T extends DBusSignal> void addSigHandler(final Class<T> type, final DBusSigHandler<T> handler)
             throws DBusException {
         if (!DBusSignal.class.isAssignableFrom(type)) {
-            throw new ClassCastException(_("Not A DBus Signal"));
+            throw new ClassCastException(localize("Not A DBus Signal"));
         }
         addSigHandler(new DBusMatchRule(type), (DBusSigHandler<? extends DBusSignal>) handler);
     }
@@ -584,11 +584,11 @@ public abstract class AbstractConnection {
     public <T extends DBusSignal> void addSigHandler(final Class<T> type, final DBusInterface object,
             final DBusSigHandler<T> handler) throws DBusException {
         if (!DBusSignal.class.isAssignableFrom(type)) {
-            throw new ClassCastException(_("Not A DBus Signal"));
+            throw new ClassCastException(localize("Not A DBus Signal"));
         }
         final String objectpath = importedObjects.get(object).objectpath;
         if (!objectpath.matches(OBJECT_REGEX) || objectpath.length() > MAX_NAME_LENGTH) {
-            throw new DBusException(_("Invalid object path: ") + objectpath);
+            throw new DBusException(localize("Invalid object path: ") + objectpath);
         }
         addSigHandler(new DBusMatchRule(type, null, objectpath), (DBusSigHandler<? extends DBusSignal>) handler);
     }
@@ -811,7 +811,7 @@ public abstract class AbstractConnection {
             if (null == eo) {
                 try {
                     queueOutgoing(new Error(m, new DBus.Error.UnknownObject(
-                            m.getPath() + _(" is not an object provided by this process."))));
+                            m.getPath() + localize(" is not an object provided by this process."))));
                 } catch (final DBusException DBe) {
                 }
                 return;
@@ -823,7 +823,7 @@ public abstract class AbstractConnection {
                 try {
                     queueOutgoing(new Error(m,
                             new DBus.Error.UnknownMethod(
-                                    MessageFormat.format(_("The method `{0}.{1}' does not exist on this object."),
+                                    MessageFormat.format(localize("The method `{0}.{1}' does not exist on this object."),
                                             new Object[] { m.getInterface(), m.getName() }))));
                 } catch (final DBusException DBe) {
                 }
@@ -859,7 +859,7 @@ public abstract class AbstractConnection {
                     }
                     try {
                         conn.queueOutgoing(new Error(m,
-                                new DBus.Error.UnknownMethod(_("Failure in de-serializing message: ") + e)));
+                                new DBus.Error.UnknownMethod(localize("Failure in de-serializing message: ") + e)));
                     } catch (final DBusException DBe) {
                     }
                     return;
@@ -913,7 +913,7 @@ public abstract class AbstractConnection {
                     try {
                         conn.queueOutgoing(new Error(m,
                                 new DBusExecutionException(
-                                        MessageFormat.format(_("Error Executing Method {0}.{1}: {2}"),
+                                        MessageFormat.format(localize("Error Executing Method {0}.{1}: {2}"),
                                                 new Object[] { m.getInterface(), m.getName(), e.getMessage() }))));
                     } catch (final DBusException DBe) {
                     }
@@ -1102,7 +1102,7 @@ public abstract class AbstractConnection {
         } else {
             try {
                 queueOutgoing(new Error(mr, new DBusExecutionException(
-                        _("Spurious reply. No message with the given serial id was awaiting a reply."))));
+                        localize("Spurious reply. No message with the given serial id was awaiting a reply."))));
             } catch (final DBusException DBe) {
             }
         }
@@ -1111,7 +1111,7 @@ public abstract class AbstractConnection {
     protected void sendMessage(final Message m) {
         try {
             if (!connected) {
-                throw new NotConnected(_("Disconnected"));
+                throw new NotConnected(localize("Disconnected"));
             }
             if (m instanceof DBusSignal) {
                 ((DBusSignal) m).appendbody(this);
@@ -1121,7 +1121,7 @@ public abstract class AbstractConnection {
                 if (0 == (m.getFlags() & Message.Flags.NO_REPLY_EXPECTED)) {
                     if (null == pendingCalls) {
                         ((MethodCall) m).setReply(new Error("org.freedesktop.DBus.Local",
-                                "org.freedesktop.DBus.Local.Disconnected", 0, "s", new Object[] { _("Disconnected") }));
+                                "org.freedesktop.DBus.Local.Disconnected", 0, "s", new Object[] { localize("Disconnected") }));
                     } else {
                         synchronized (pendingCalls) {
                             pendingCalls.put(m.getSerial(), (MethodCall) m);
@@ -1139,7 +1139,7 @@ public abstract class AbstractConnection {
             if (m instanceof MethodCall && e instanceof NotConnected) {
                 try {
                     ((MethodCall) m).setReply(new Error("org.freedesktop.DBus.Local",
-                            "org.freedesktop.DBus.Local.Disconnected", 0, "s", new Object[] { _("Disconnected") }));
+                            "org.freedesktop.DBus.Local.Disconnected", 0, "s", new Object[] { localize("Disconnected") }));
                 } catch (final DBusException DBe) {
                 }
             }
@@ -1152,7 +1152,7 @@ public abstract class AbstractConnection {
                 try {
                     logger.info("Setting reply to {} as an error", m);
                     ((MethodCall) m).setReply(
-                            new Error(m, new DBusExecutionException(_("Message Failed to Send: ") + e.getMessage())));
+                            new Error(m, new DBusExecutionException(localize("Message Failed to Send: ") + e.getMessage())));
                 } catch (final DBusException DBe) {
                 }
             } else if (m instanceof MethodReturn) {
@@ -1176,7 +1176,7 @@ public abstract class AbstractConnection {
 
     private Message readIncoming() throws DBusException {
         if (!connected) {
-            throw new NotConnected(_("No transport present"));
+            throw new NotConnected(localize("No transport present"));
         }
         Message m = null;
         try {

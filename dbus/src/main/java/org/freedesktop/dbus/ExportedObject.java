@@ -11,7 +11,7 @@
 
 package org.freedesktop.dbus;
 
-import static org.freedesktop.dbus.Gettext._;
+import static org.freedesktop.dbus.Gettext.localize;
 
 import java.lang.annotation.Annotation;
 import java.lang.ref.Reference;
@@ -67,11 +67,11 @@ class ExportedObject {
                     // don't let people export things which don't have a
                     // valid D-Bus interface name
                     if (c.getName().equals(c.getSimpleName())) {
-                        throw new DBusException(_("DBusInterfaces cannot be declared outside a package"));
+                        throw new DBusException(localize("DBusInterfaces cannot be declared outside a package"));
                     }
                     if (c.getName().length() > DBusConnection.MAX_NAME_LENGTH) {
                         throw new DBusException(
-                                _("Introspected interface name exceeds 255 characters. Cannot export objects of type ")
+                                localize("Introspected interface name exceeds 255 characters. Cannot export objects of type ")
                                         + c.getName());
                     } else {
                         introspectiondata += " <interface name=\""
@@ -90,7 +90,7 @@ class ExportedObject {
                         }
                         if (name.length() > DBusConnection.MAX_NAME_LENGTH) {
                             throw new DBusException(
-                                    _("Introspected method name exceeds 255 characters. Cannot export objects with method ")
+                                    localize("Introspected method name exceeds 255 characters. Cannot export objects with method ")
                                             + name);
                         }
                         introspectiondata += "  <method name=\"" + name + "\" >\n";
@@ -121,7 +121,7 @@ class ExportedObject {
                                     }
                                 }
                             } else if (Object[].class.equals(meth.getGenericReturnType())) {
-                                throw new DBusException(_("Return type of Object[] cannot be introspected properly"));
+                                throw new DBusException(localize("Return type of Object[] cannot be introspected properly"));
                             } else {
                                 for (final String s : Marshalling.getDBusType(meth.getGenericReturnType())) {
                                     introspectiondata += "   <arg type=\"" + s + "\" direction=\"out\"/>\n";
@@ -143,7 +143,7 @@ class ExportedObject {
                         }
                         if (name.length() > DBusConnection.MAX_NAME_LENGTH) {
                             throw new DBusException(
-                                    _("Introspected signal name exceeds 255 characters. Cannot export objects with signals of type ")
+                                    localize("Introspected signal name exceeds 255 characters. Cannot export objects with signals of type ")
                                             + name);
                         }
                         introspectiondata += "  <signal name=\"" + name + "\">\n";

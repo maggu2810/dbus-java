@@ -11,7 +11,7 @@
 
 package org.freedesktop.dbus.viewer;
 
-import static org.freedesktop.dbus.Gettext._;
+import static org.freedesktop.dbus.Gettext.localize;
 
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
@@ -114,7 +114,7 @@ public class DBusViewer {
      */
     private void addTabs(final JTabbedPane tabbedPane, final Map<String, Integer> connectionTypes) {
         for (final String key : connectionTypes.keySet()) {
-            final JLabel label = new JLabel(_("Processing DBus for ") + key);
+            final JLabel label = new JLabel(localize("Processing DBus for ") + key);
             tabbedPane.addTab(key, label);
         }
         final Runnable loader = new Runnable() {
@@ -154,7 +154,7 @@ public class DBusViewer {
                             public void run() {
                                 final int index = tabbedPane.indexOfTab(key);
                                 final JLabel label = (JLabel) tabbedPane.getComponentAt(index);
-                                label.setText(_("Could not load Dbus information for ") + key + ":" + e.getMessage());
+                                label.setText(localize("Could not load Dbus information for ") + key + ":" + e.getMessage());
                             }
                         });
                     } catch (final DBusExecutionException e) {
@@ -163,7 +163,7 @@ public class DBusViewer {
                             public void run() {
                                 final int index = tabbedPane.indexOfTab(key);
                                 final JLabel label = (JLabel) tabbedPane.getComponentAt(index);
-                                label.setText(_("Could not load Dbus information for ") + key + ":" + e.getMessage());
+                                label.setText(localize("Could not load Dbus information for ") + key + ":" + e.getMessage());
                             }
                         });
                     }
@@ -246,7 +246,7 @@ public class DBusViewer {
                 builder = factory.newDocumentBuilder();
             } catch (final ParserConfigurationException e1) {
                 // TODO Auto-generated catch block
-                throw new RuntimeException(_("Error during parser init: ") + e1.getMessage(), e1);
+                throw new RuntimeException(localize("Error during parser init: ") + e1.getMessage(), e1);
             }
             reset();
 

@@ -11,7 +11,7 @@
 
 package org.freedesktop.dbus.bin;
 
-import static org.freedesktop.dbus.Gettext._;
+import static org.freedesktop.dbus.Gettext.localize;
 import static org.freedesktop.dbus.bin.IdentifierMangler.mangle;
 
 import java.io.File;
@@ -176,7 +176,7 @@ public class CreateInterface {
         final Vector<Element> in = new Vector<Element>();
         final Vector<Element> out = new Vector<Element>();
         if (null == meth.getAttribute("name") || "".equals(meth.getAttribute("name"))) {
-            System.err.println(_("ERROR: Method name was blank, failed"));
+            System.err.println(localize("ERROR: Method name was blank, failed"));
             System.exit(1);
         }
         String annotations = "";
@@ -303,7 +303,7 @@ public class CreateInterface {
             final Map<StructStruct, Type[]> structs, final Set<String> exceptions, final Set<String> anns)
             throws DBusException {
         if (null == iface.getAttribute("name") || "".equals(iface.getAttribute("name"))) {
-            System.err.println(_("ERROR: Interface name was blank, failed"));
+            System.err.println(localize("ERROR: Interface name was blank, failed"));
             System.exit(1);
         }
 
@@ -490,7 +490,7 @@ public class CreateInterface {
             } else if ("node".equals(iface.getNodeName())) {
                 parseRoot((Element) iface);
             } else {
-                System.err.println(_("ERROR: Unknown node: ") + iface.getNodeName());
+                System.err.println(localize("ERROR: Unknown node: ") + iface.getNodeName());
                 System.exit(1);
             }
         }
@@ -615,7 +615,7 @@ public class CreateInterface {
             }
             expected += name + " or ";
         }
-        System.err.println(MessageFormat.format(_("ERROR: Expected {0}, got {1}, failed."),
+        System.err.println(MessageFormat.format(localize("ERROR: Expected {0}, got {1}, failed."),
                 new Object[] { expected.replaceAll("....$", ""), n.getNodeName() }));
         System.exit(1);
     }
@@ -667,7 +667,7 @@ public class CreateInterface {
                 version();
                 System.exit(0);
             } else if (p.startsWith("-")) {
-                System.err.println(_("ERROR: Unknown option: ") + p);
+                System.err.println(localize("ERROR: Unknown option: ") + p);
                 printSyntax();
                 System.exit(1);
             } else {
@@ -702,16 +702,16 @@ public class CreateInterface {
                 final Introspectable in = conn.getRemoteObject(config.busname, config.object, Introspectable.class);
                 final String id = in.Introspect();
                 if (null == id) {
-                    System.err.println(_("ERROR: Failed to get introspection data"));
+                    System.err.println(localize("ERROR: Failed to get introspection data"));
                     System.exit(1);
                 }
                 introspectdata = new StringReader(id);
                 conn.disconnect();
             } catch (final DBusException DBe) {
-                System.err.println(_("ERROR: Failure in DBus Communications: ") + DBe.getMessage());
+                System.err.println(localize("ERROR: Failure in DBus Communications: ") + DBe.getMessage());
                 System.exit(1);
             } catch (final DBusExecutionException DEe) {
-                System.err.println(_("ERROR: Failure in DBus Communications: ") + DEe.getMessage());
+                System.err.println(localize("ERROR: Failure in DBus Communications: ") + DEe.getMessage());
                 System.exit(1);
 
             }
@@ -719,7 +719,7 @@ public class CreateInterface {
             try {
                 introspectdata = new InputStreamReader(new FileInputStream(config.datafile));
             } catch (final FileNotFoundException FNFe) {
-                System.err.println(_("ERROR: Could not find introspection file: ") + FNFe.getMessage());
+                System.err.println(localize("ERROR: Could not find introspection file: ") + FNFe.getMessage());
                 System.exit(1);
             }
         }

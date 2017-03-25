@@ -11,7 +11,7 @@
 
 package org.freedesktop.dbus;
 
-import static org.freedesktop.dbus.Gettext._;
+import static org.freedesktop.dbus.Gettext.localize;
 
 import java.text.ParseException;
 import java.util.HashMap;
@@ -28,12 +28,12 @@ public class BusAddress {
 
     public BusAddress(final String address) throws ParseException {
         if (null == address || "".equals(address)) {
-            throw new ParseException(_("Bus address is blank"), 0);
+            throw new ParseException(localize("Bus address is blank"), 0);
         }
         logger.trace("Parsing bus address: {}", address);
         final String[] ss = address.split(":", 2);
         if (ss.length < 2) {
-            throw new ParseException(_("Bus address is invalid: ") + address, 0);
+            throw new ParseException(localize("Bus address is invalid: ") + address, 0);
         }
         type = ss[0];
         logger.trace("Transport type: {}", type);

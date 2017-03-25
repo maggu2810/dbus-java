@@ -11,7 +11,7 @@
 
 package org.freedesktop.dbus;
 
-import static org.freedesktop.dbus.Gettext._;
+import static org.freedesktop.dbus.Gettext.localize;
 
 import java.io.BufferedInputStream;
 import java.io.EOFException;
@@ -56,7 +56,7 @@ public class MessageReader {
                 return null;
             }
             if (-1 == rv) {
-                throw new EOFException(_("Underlying transport returned EOF"));
+                throw new EOFException(localize("Underlying transport returned EOF"));
             }
             len[0] += rv;
         }
@@ -75,7 +75,7 @@ public class MessageReader {
         if (protover > Message.PROTOCOL) {
             buf = null;
             throw new MessageProtocolVersionException(
-                    MessageFormat.format(_("Protocol version {0} is unsupported"), new Object[] { protover }));
+                    MessageFormat.format(localize("Protocol version {0} is unsupported"), new Object[] { protover }));
         }
 
         /* Read the length of the variable header */
@@ -90,7 +90,7 @@ public class MessageReader {
                 return null;
             }
             if (-1 == rv) {
-                throw new EOFException(_("Underlying transport returned EOF"));
+                throw new EOFException(localize("Underlying transport returned EOF"));
             }
             len[1] += rv;
         }
@@ -123,7 +123,7 @@ public class MessageReader {
                 return null;
             }
             if (-1 == rv) {
-                throw new EOFException(_("Underlying transport returned EOF"));
+                throw new EOFException(localize("Underlying transport returned EOF"));
             }
             len[2] += rv;
         }
@@ -148,7 +148,7 @@ public class MessageReader {
                 return null;
             }
             if (-1 == rv) {
-                throw new EOFException(_("Underlying transport returned EOF"));
+                throw new EOFException(localize("Underlying transport returned EOF"));
             }
             len[3] += rv;
         }
@@ -173,7 +173,7 @@ public class MessageReader {
                 break;
             default:
                 throw new MessageTypeException(
-                        MessageFormat.format(_("Message type {0} unsupported"), new Object[] { type }));
+                        MessageFormat.format(localize("Message type {0} unsupported"), new Object[] { type }));
         }
         if (logger.isTraceEnabled()) {
             logger.trace("{}", Hexdump.format(buf));

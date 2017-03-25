@@ -11,7 +11,7 @@
 
 package org.freedesktop.dbus;
 
-import static org.freedesktop.dbus.Gettext._;
+import static org.freedesktop.dbus.Gettext.localize;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -113,13 +113,13 @@ public class DBusAsyncReply<ReturnType> {
         } else if (null != error) {
             throw error;
         } else {
-            throw new NoReply(_("Async call has not had a reply"));
+            throw new NoReply(localize("Async call has not had a reply"));
         }
     }
 
     @Override
     public String toString() {
-        return _("Waiting for: ") + mc;
+        return localize("Waiting for: ") + mc;
     }
 
     Method getMethod() {

@@ -11,7 +11,7 @@
 
 package org.freedesktop.dbus;
 
-import static org.freedesktop.dbus.Gettext._;
+import static org.freedesktop.dbus.Gettext.localize;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.GenericDeclaration;
@@ -37,7 +37,7 @@ public class DBusSignal extends Message {
         super(Message.Endian.BIG, Message.MessageType.SIGNAL, (byte) 0);
 
         if (null == path || null == member || null == iface) {
-            throw new MessageFormatException(_("Must specify object path, interface and signal name to Signals."));
+            throw new MessageFormatException(localize("Must specify object path, interface and signal name to Signals."));
         }
         headers.put(Message.HeaderField.PATH, path);
         headers.put(Message.HeaderField.MEMBER, member);
@@ -108,7 +108,7 @@ public class DBusSignal extends Message {
             }
 
         } else {
-            throw new DBusException(_(
+            throw new DBusException(localize(
                     "Signals must be declared as a member of a class implementing DBusInterface which is the member of a package."));
         }
         final DBusSignal s = new internalsig(source, objectpath, type, c.getSimpleName(), sig, parameters, serial);
@@ -135,7 +135,7 @@ public class DBusSignal extends Message {
             name = name.replaceAll("\\.([^\\.]*)$", "\\$$1");
         } while (null == c && name.matches(".*\\..*"));
         if (null == c) {
-            throw new DBusException(_("Could not create class from signal ") + intname + '.' + signame);
+            throw new DBusException(localize("Could not create class from signal ") + intname + '.' + signame);
         }
         classCache.put(name, c);
         return c;
@@ -212,7 +212,7 @@ public class DBusSignal extends Message {
         super(Message.Endian.BIG, Message.MessageType.SIGNAL, (byte) 0);
 
         if (!objectpath.matches(AbstractConnection.OBJECT_REGEX)) {
-            throw new DBusException(_("Invalid object path: ") + objectpath);
+            throw new DBusException(localize("Invalid object path: ") + objectpath);
         }
 
         final Class<? extends DBusSignal> tc = getClass();
@@ -225,7 +225,7 @@ public class DBusSignal extends Message {
         String iface = null;
         final Class<? extends Object> enc = tc.getEnclosingClass();
         if (null == enc || !DBusInterface.class.isAssignableFrom(enc) || enc.getName().equals(enc.getSimpleName())) {
-            throw new DBusException(_(
+            throw new DBusException(localize(
                     "Signals must be declared as a member of a class implementing DBusInterface which is the member of a package."));
         } else if (null != enc.getAnnotation(DBusInterfaceName.class)) {
             iface = enc.getAnnotation(DBusInterfaceName.class).value();
@@ -271,7 +271,7 @@ public class DBusSignal extends Message {
                 if (AbstractConnection.EXCEPTION_DEBUG) {
                     logger.error("Exception", e);
                 }
-                throw new DBusException(_("Failed to add signal parameters: ") + e.getMessage());
+                throw new DBusException(localize("Failed to add signal parameters: ") + e.getMessage());
             }
         }
 
