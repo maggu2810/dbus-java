@@ -524,7 +524,7 @@ public class Marshalling {
 
             // recurse over struct contents
             parameter = deSerializeParameters((Object[]) parameter, ts, conn);
-            for (final Constructor con : ((Class<?>) type).getDeclaredConstructors()) {
+            for (final Constructor<?> con : ((Class<?>) type).getDeclaredConstructors()) {
                 try {
                     parameter = con.newInstance((Object[]) parameter);
                     break;
