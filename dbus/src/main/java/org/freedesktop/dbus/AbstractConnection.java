@@ -1002,6 +1002,7 @@ public abstract class AbstractConnection {
                 cbh = pendingCallbacks.remove(m);
                 logger.trace("{} = pendingCallbacks.remove({})", cbh, m);
                 asr = pendingCallbackReplys.remove(m);
+                logger.trace("{} = pendingCallbackReplyss.remove({})", asr, m);
             }
             // queue callback for execution
             if (null != cbh) {

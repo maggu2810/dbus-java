@@ -121,7 +121,7 @@ public class CreateInterface {
             return "";
         }
         final Vector<Type> v = new Vector<>();
-        final int c = Marshalling.getJavaType(dbus, v, 1);
+        /* final int c = */ Marshalling.getJavaType(dbus, v, 1);
         final Type t = v.get(0);
         return collapseType(t, imports, structs, container, fullnames);
     }
