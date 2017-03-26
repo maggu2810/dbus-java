@@ -54,12 +54,12 @@
       <dependency>
         <groupId>de.maggu2810.libmatthew</groupId>
         <artifactId>unix</artifactId>
-        <version>0.5.1-SNAPSHOT</version>
+        <version>1.0.0.a1</version>
       </dependency>
       <dependency>
         <groupId>de.maggu2810.libmatthew</groupId>
         <artifactId>hexdump</artifactId>
-        <version>0.2.0</version>
+        <version>1.0.0.a1</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
