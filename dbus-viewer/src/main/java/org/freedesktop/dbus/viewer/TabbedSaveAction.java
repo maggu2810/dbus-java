@@ -26,7 +26,7 @@ import javax.swing.text.JTextComponent;
 abstract class TabbedSaveAction extends AbstractAction implements Iterable<TextFile> {
     private static final long serialVersionUID = 1L;
 
-   /**
+    /**
      * File chooser component.
      * Make static so that previous save location is stored
      */
