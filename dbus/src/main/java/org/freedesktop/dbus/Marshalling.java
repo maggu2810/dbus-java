@@ -594,7 +594,7 @@ public class Marshalling {
         }
         if (parameter instanceof DBusMap) {
             LOGGER.trace("Deserializing a Map");
-            final DBusMap dmap = (DBusMap) parameter;
+            final DBusMap<?, ?> dmap = (DBusMap<?, ?>) parameter;
             final Type[] maptypes = ((ParameterizedType) type).getActualTypeArguments();
             for (int i = 0; i < dmap.entries.length; i++) {
                 dmap.entries[i][0] = deSerializeParameter(dmap.entries[i][0], maptypes[0], conn);
