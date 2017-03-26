@@ -331,7 +331,6 @@ public class DBusConnection extends AbstractConnection {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private DBusConnection(final String address) throws DBusException {
         super(address);
         busnames = new Vector<>();
@@ -361,7 +360,7 @@ public class DBusConnection extends AbstractConnection {
         listen();
 
         // register disconnect handlers
-        final DBusSigHandler h = new _sighandler();
+        final DBusSigHandler<DBusSignal> h = new _sighandler();
         addSigHandlerWithoutMatch(org.freedesktop.DBus.Local.Disconnected.class, h);
         addSigHandlerWithoutMatch(org.freedesktop.DBus.NameAcquired.class, h);
 
