@@ -681,7 +681,7 @@ public class Message {
                         i = diff;
                     } else if (data instanceof Map) {
                         int diff = i;
-                        ensureBuffers(((Map) data).size() * 6);
+                        ensureBuffers(((Map<?, ?>) data).size() * 6);
                         for (final Map.Entry<Object, Object> o : ((Map<Object, Object>) data).entrySet()) {
                             diff = appendone(sigb, i, o);
                         }
@@ -726,9 +726,9 @@ public class Message {
                     // Dict entries are the same as structs.
                     if (data instanceof Map.Entry) {
                         i++;
-                        i = appendone(sigb, i, ((Map.Entry) data).getKey());
+                        i = appendone(sigb, i, ((Map.Entry<Object, Object>) data).getKey());
                         i++;
-                        i = appendone(sigb, i, ((Map.Entry) data).getValue());
+                        i = appendone(sigb, i, ((Map.Entry<Object, Object>) data).getValue());
                         i++;
                     } else {
                         contents = (Object[]) data;

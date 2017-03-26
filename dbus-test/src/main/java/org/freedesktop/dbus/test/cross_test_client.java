@@ -241,8 +241,8 @@ public class cross_test_client implements DBus.Binding.TestClient, DBusSigHandle
                     vs.addAll(PrimitizeRecurse(Array.get(os, i), ts[0]));
                 }
             } else if (Map.class.isAssignableFrom(c)) {
-                final Object[] os = ((Map) a).keySet().toArray();
-                final Object[] ks = ((Map) a).values().toArray();
+                final Object[] os = ((Map<Object, Object>) a).keySet().toArray();
+                final Object[] ks = ((Map<Object, Object>) a).values().toArray();
                 final Type[] ts = ((ParameterizedType) t).getActualTypeArguments();
                 for (int i = 0; i < ks.length; i++) {
                     vs.addAll(PrimitizeRecurse(ks[i], ts[0]));
@@ -258,12 +258,10 @@ public class cross_test_client implements DBus.Binding.TestClient, DBusSigHandle
                 }
 
             } else if (Variant.class.isAssignableFrom(c)) {
-                vs.addAll(PrimitizeRecurse(((Variant<?>) a).getValue(),
-                        ((Variant<?>) a).getType()));
+                vs.addAll(PrimitizeRecurse(((Variant<?>) a).getValue(), ((Variant<?>) a).getType()));
             }
         } else if (Variant.class.isAssignableFrom((Class<?>) t)) {
-            vs.addAll(PrimitizeRecurse(((Variant<?>) a).getValue(),
-                    ((Variant<?>) a).getType()));
+            vs.addAll(PrimitizeRecurse(((Variant<?>) a).getValue(), ((Variant<?>) a).getType()));
         } else if (t instanceof Class && ((Class<?>) t).isArray()) {
             final Type t2 = ((Class<?>) t).getComponentType();
             for (int i = 0; i < Array.getLength(a); i++) {
