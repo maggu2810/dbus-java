@@ -896,8 +896,8 @@ public class test {
             }
 
             System.out.println("Doing stuff asynchronously");
-            final DBusAsyncReply<Boolean> stuffreply = clientconn.callMethodAsync(tri2, "dostuff",
-                    new TestStruct("bar", new UInt32(52), new Variant<>(new Boolean(true))));
+            final DBusAsyncReply<Boolean> stuffreply = (DBusAsyncReply<Boolean>) clientconn.callMethodAsync(tri2,
+                    "dostuff", new TestStruct("bar", new UInt32(52), new Variant<>(new Boolean(true))));
 
             System.out.println("Checking bools");
             if (tri2.check()) {

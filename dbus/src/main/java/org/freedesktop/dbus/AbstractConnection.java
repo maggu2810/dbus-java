@@ -737,7 +737,7 @@ public abstract class AbstractConnection {
      * @param parameters The parameters to call the method with.
      * @return A handle to the call.
      */
-    public DBusAsyncReply callMethodAsync(final DBusInterface object, final String m, final Object... parameters) {
+    public DBusAsyncReply<?> callMethodAsync(final DBusInterface object, final String m, final Object... parameters) {
         final Class<?>[] types = new Class[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
             types[i] = parameters[i].getClass();
@@ -751,7 +751,7 @@ public abstract class AbstractConnection {
             } else {
                 me = ro.iface.getMethod(m, types);
             }
-            return (DBusAsyncReply) RemoteInvocationHandler.executeRemoteMethod(ro, me, this,
+            return (DBusAsyncReply<?>) RemoteInvocationHandler.executeRemoteMethod(ro, me, this,
                     RemoteInvocationHandler.CALL_TYPE_ASYNC, null, parameters);
         } catch (final DBusExecutionException DBEe) {
             if (EXCEPTION_DEBUG) {
@@ -997,7 +997,7 @@ public abstract class AbstractConnection {
         if (null != m) {
             m.setReply(err);
             CallbackHandler<? extends Object> cbh = null;
-            DBusAsyncReply asr = null;
+            DBusAsyncReply<?> asr = null;
             synchronized (pendingCallbacks) {
                 cbh = pendingCallbacks.remove(m);
                 logger.trace("{} = pendingCallbacks.remove({})", cbh, m);
@@ -1060,7 +1060,7 @@ public abstract class AbstractConnection {
             m.setReply(mr);
             mr.setCall(m);
             CallbackHandler<? extends Object> cbh = null;
-            DBusAsyncReply asr = null;
+            DBusAsyncReply<?> asr = null;
             synchronized (pendingCallbacks) {
                 cbh = pendingCallbacks.remove(m);
                 logger.trace("{} = pendingCallbacks.remove({})", cbh, m);
@@ -1069,7 +1069,7 @@ public abstract class AbstractConnection {
             // queue callback for execution
             if (null != cbh) {
                 final CallbackHandler<Object> fcbh = (CallbackHandler<Object>) cbh;
-                final DBusAsyncReply fasr = asr;
+                final DBusAsyncReply<?> fasr = asr;
                 logger.trace("Adding Runnable for method {} with callback handler {}", fasr.getMethod(), fcbh);
                 addRunnable(new Runnable() {
                     private boolean run = false;

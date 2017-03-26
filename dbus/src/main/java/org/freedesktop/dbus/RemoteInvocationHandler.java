@@ -86,7 +86,6 @@ class RemoteInvocationHandler implements InvocationHandler {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public static Object executeRemoteMethod(final RemoteObject ro, final Method m, final AbstractConnection conn,
             final int syncmethod, final CallbackHandler<?> callback, Object... args) throws DBusExecutionException {
         final Type[] ts = m.getGenericParameterTypes();
@@ -142,12 +141,12 @@ class RemoteInvocationHandler implements InvocationHandler {
         switch (syncmethod) {
             case CALL_TYPE_ASYNC:
                 conn.queueOutgoing(call);
-                return new DBusAsyncReply(call, m, conn);
+                return new DBusAsyncReply<>(call, m, conn);
             case CALL_TYPE_CALLBACK:
                 synchronized (conn.pendingCallbacks) {
                     LOGGER.trace("Queueing Callback {} for {}", callback, call);
                     conn.pendingCallbacks.put(call, callback);
-                    conn.pendingCallbackReplys.put(call, new DBusAsyncReply(call, m, conn));
+                    conn.pendingCallbackReplys.put(call, new DBusAsyncReply<>(call, m, conn));
                 }
                 conn.queueOutgoing(call);
                 return null;
